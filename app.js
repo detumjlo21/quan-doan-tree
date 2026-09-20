@@ -16,10 +16,9 @@ async function load(){
 }
 
 function render(){
-  $("#qdanName").textContent=data.name;
   $("#branches").innerHTML=data.branches.length?data.branches.map((b,i)=>`
     <article class="branch">
-      <div class="branch-title"><span class="tree-icon">♟</span> NHÁNH ${i+1}</div>
+      <div class="branch-title"><span class="tree-icon">♟</span> ${esc(b.name||`NHÁNH ${i+1}`)}</div>
       <div class="branch-card">
         ${role("♛","CHỦ QUÂN ĐOÀN",b.owner_name,"owner-role")}
         ${role("★","QUYỀN CHỦ QĐ",b.deputy_name,"deputy-role")}
