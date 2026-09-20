@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quân Đoàn - Cây Chức Vụ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<header class="topbar">
+  <div>
+    <div class="eyebrow">QUÂN ĐOÀN</div>
+    <h1 id="headerName">PHOENIX</h1>
+  </div>
+  <button class="admin-btn" id="openAdmin">⚙ ADMIN</button>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div class="hero-badge">🌳</div>
+    <div>
+      <p class="eyebrow">SƠ ĐỒ TỔ CHỨC</p>
+      <h2>CÂY CHỨC VỤ QUÂN ĐOÀN</h2>
+      <p class="muted">Tất cả các nhánh được hiển thị đồng thời</p>
+    </div>
+  </section>
+
+  <section class="commander-wrap">
+    <div class="person-card leader">
+      <div class="avatar" id="mainAvatar">👑</div>
+      <div class="rank">QUÂN ĐOÀN TỔNG</div>
+      <div class="person-name" id="mainName">PHOENIX</div>
+      <div class="small">Quản lý toàn bộ hệ thống</div>
+    </div>
+    <div class="connector vertical"></div>
+  </section>
+
+  <section id="branches" class="branches"></section>
+</main>
+
+<div class="modal hidden" id="adminModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow">ADMIN PANEL</div>
+        <h2>Quản lý cây chức vụ</h2>
+      </div>
+      <button class="icon-btn" id="closeAdmin">✕</button>
+    </div>
+
+    <div class="settings">
+      <label>Tên Quân Đoàn
+        <input id="settingsName" type="text" placeholder="Tên quân đoàn">
+      </label>
+    </div>
+
+    <div class="section-title">
+      <span>DANH SÁCH NHÁNH</span>
+      <button class="add-btn" id="addBranch">＋ THÊM NHÁNH</button>
+    </div>
+
+    <div id="adminBranches"></div>
+
+    <div class="modal-actions">
+      <button class="secondary" id="resetData">Khôi phục mẫu</button>
+      <button class="primary" id="saveData">💾 LƯU THAY ĐỔI</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
