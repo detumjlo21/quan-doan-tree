@@ -195,3 +195,36 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
     background-position: center center;
   }
 }
+
+/* ===== PC OVERFLOW FIX ===== */
+@media (min-width: 801px){
+  .branch-card,
+  .veterans,
+  .veterans .role,
+  .role{
+    box-sizing: border-box;
+    min-width: 0;
+  }
+
+  .veterans{
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .veterans .role{
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .veterans .role b,
+  .role b{
+    display: block;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
