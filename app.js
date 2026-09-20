@@ -7,16 +7,46 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const safeUrl=(url,fallback="#")=>{const v=String(url||"").trim(); if(!v)return fallback; if(v.startsWith("/")||v.startsWith("./")||v.startsWith("../"))return v; try{const u=new URL(v,location.href); return ["http:","https:"].includes(u.protocol)?u.href:fallback}catch{return fallback}};
 const defaultBoxes=()=>data.branches.map((b,i)=>({id:`fallback-${i}`,title:b.name||`PHOENIX 禄 ( Nhánh ${i+1} )`,subtitle:"",image:"logo-quant-doan.jpg",link:"#",sort_order:i+1}));
 
+const fallbackBranches=()=>[1,2,3,4,5].map((n)=>({
+  id:`fallback-branch-${n}`,
+  name:`NHÁNH ${n}`,
+  sort_order:n,
+  owner_name:`Chủ Nhánh ${n}`,
+  deputy_name:`Quyền Chủ ${n}`,
+  veteran1:"Kỳ Cựu 1",
+  veteran2:"Kỳ Cựu 2",
+  veteran3:"Kỳ Cựu 3"
+}));
+
 async function load(){
-  const {data:r,error}=await db.from("quan_doan_settings").select("*").eq("id",1).maybeSingle();
-  if(r){data.name=r.name||"PHOENIX";data.support={link:r.support_link||"#",label:r.support_label||"LIÊN HỆ FB",image:r.support_image||"logo-quant-doan.jpg"}}
-  if(error)console.error(error);
+  // Render cây chức vụ trước, để lỗi Box Chat không bao giờ làm mất cây.
+  data.branches = data.branches?.length ? data.branches : fallbackBranches();
+  render();
+
+  const {data:r,error:se}=await db.from("quan_doan_settings").select("*").eq("id",1).maybeSingle();
+  if(r){
+    data.name=r.name||"PHOENIX";
+    data.support={link:r.support_link||"#",label:r.support_label||"LIÊN HỆ FB",image:r.support_image||"logo-quant-doan.jpg"};
+  }
+  if(se) console.warn("Không đọc được settings:",se.message);
+
   const {data:b,error:e}=await db.from("quan_doan_branches").select("*").order("sort_order",{ascending:true});
-  if(e){console.error(e);return}
-  data.branches=b||[];
+  if(e){
+    console.error("Không đọc được cây chức vụ, dùng dữ liệu mặc định:",e.message);
+    data.branches=fallbackBranches();
+  }else{
+    data.branches=(b&&b.length)?b:fallbackBranches();
+  }
+  // Luôn render lại sau khi lấy dữ liệu thật từ Supabase.
+  render();
+
   const {data:c,error:ce}=await db.from("quan_doan_chat_boxes").select("*").order("sort_order",{ascending:true});
-  if(ce){console.warn("Chưa có bảng quan_doan_chat_boxes. Hãy chạy supabase.sql mới.",ce.message);data.chatBoxes=defaultBoxes()}else data.chatBoxes=c||[];
-  render();renderChat();renderSupport();
+  if(ce){
+    console.warn("Chưa đọc được bảng quan_doan_chat_boxes:",ce.message);
+    data.chatBoxes=defaultBoxes();
+  }else data.chatBoxes=c||[];
+  renderChat();
+  renderSupport();
 }
 function render(){
   $("#branches").innerHTML=data.branches.length?data.branches.map((b,i)=>`<article class="branch"><div class="branch-title"><span class="tree-icon">♟</span> ${esc(b.name||`NHÁNH ${i+1}`)}</div><div class="branch-card">${role("♛","CHỦ QUÂN ĐOÀN",b.owner_name,"owner-role")}${role("★","QUYỀN CHỦ QĐ",b.deputy_name,"deputy-role")}<div class="veterans">${role("⬟","KỲ CỰU 1",b.veteran1)}${role("⬟","KỲ CỰU 2",b.veteran2)}${role("⬟","KỲ CỰU 3",b.veteran3)}</div></div></article>`).join(""):"<p>Chưa có nhánh.</p>";
