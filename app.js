@@ -23,9 +23,9 @@ function render(){
         ${role("♛","CHỦ QUÂN ĐOÀN",b.owner_name,"owner-role")}
         ${role("★","QUYỀN CHỦ QĐ",b.deputy_name,"deputy-role")}
         <div class="veterans">
-          ${role("⬟","KỲ CỰU 1",b.veteran1)}
-          ${role("⬟","KỲ CỰU 2",b.veteran2)}
-          ${role("⬟","KỲ CỰU 3",b.veteran3)}
+          ${role("🎖️","KỲ CỰU 1",b.veteran1)}
+          ${role("🎖️","KỲ CỰU 2",b.veteran2)}
+          ${role("🎖️","KỲ CỰU 3",b.veteran3)}
         </div>
       </div>
     </article>`).join(""):"<p>Chưa có nhánh.</p>";
@@ -49,9 +49,9 @@ function buildEditors(){
       <label class="wide">Tên nhánh<input data-f="name" value="${esc(b.name)}"></label>
       <label>👑 Chủ Quân Đoàn<input data-f="owner_name" value="${esc(b.owner_name)}"></label>
       <label>⭐ Quyền Chủ QĐ<input data-f="deputy_name" value="${esc(b.deputy_name)}"></label>
-      <label>🛡️ Kỳ cựu 1<input data-f="veteran1" value="${esc(b.veteran1)}"></label>
-      <label>🛡️ Kỳ cựu 2<input data-f="veteran2" value="${esc(b.veteran2)}"></label>
-      <label>🛡️ Kỳ cựu 3<input data-f="veteran3" value="${esc(b.veteran3)}"></label>
+      <label>🎖️ Kỳ cựu 1<input data-f="veteran1" value="${esc(b.veteran1)}"></label>
+      <label>🎖️ Kỳ cựu 2<input data-f="veteran2" value="${esc(b.veteran2)}"></label>
+      <label>🎖️ Kỳ cựu 3<input data-f="veteran3" value="${esc(b.veteran3)}"></label>
     </div></div>`).join("");
 }
 
