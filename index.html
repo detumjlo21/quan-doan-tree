@@ -16,55 +16,33 @@
     <img src="logo-quant-doan.jpg" alt="Logo PHOENIX">
     <div class="brand-copy"><b>PHOENIX</b><span>THÔNG TIN QUÂN ĐOÀN</span></div>
   </div>
-  <nav class="nav">
-    <a href="#home">⌂ <span>Trang chủ</span></a>
-    <a class="active" href="#org">♟ <span>Cây chức vụ</span></a>
-    <a href="#members">♟ <span>Thành viên</span></a>
-    <a href="#about">● <span>Giới thiệu</span></a>
-  </nav>
   <button id="adminBtn" class="admin-btn">▣ &nbsp;Đăng nhập Admin</button>
 </header>
 
 <main id="org">
-  <section class="hero" id="home">
-    <div class="hero-copy">
-      <small>THÔNG TIN QUÂN ĐOÀN</small>
-      <p>Thông tin tổ chức và các nhánh của PHOENIX</p>
-    </div>
-  </section>
-
   <section class="org-tree" aria-label="Sơ đồ tổ chức">
-    <div class="root-wrap">
-      <div class="root-card" aria-label="Logo quân đoàn tổng">
-        <img class="root-logo" src="logo-quant-doan.jpg" alt="PHOENIX">
-      </div>
-    </div>
+    <div class="root-wrap"><div class="root-card"><img class="root-logo" src="logo-quant-doan.jpg" alt="PHOENIX"></div></div>
     <div class="tree-line" aria-hidden="true"></div>
     <div id="branches" class="branches"></div>
   </section>
 </main>
 
-<section id="members" class="placeholder-section"><h2>THÀNH VIÊN</h2><p>Danh sách thành viên sẽ được tích hợp tại đây.</p></section>
-<section id="about" class="placeholder-section"><h2>GIỚI THIỆU</h2><p>Thông tin về PHOENIX.</p></section>
-
 <div id="modal" class="modal hidden">
   <div class="panel">
-    <div class="panelhead">
-      <div><small>ADMIN</small><h2>Quản lý cây chức vụ</h2></div>
-      <button id="close">✕</button>
-    </div>
+    <div class="panelhead"><div><small>ADMIN</small><h2>Quản lý PHOENIX</h2></div><button id="close">✕</button></div>
     <div id="loginBox">
       <p>Đăng nhập tài khoản Admin Supabase.</p>
-      <input id="email" type="email" placeholder="Email Admin">
-      <input id="password" type="password" placeholder="Mật khẩu">
-      <button class="primary" id="login">ĐĂNG NHẬP</button>
-      <div id="loginMsg" class="msg"></div>
+      <input id="email" type="email" placeholder="Email Admin"><input id="password" type="password" placeholder="Mật khẩu">
+      <button class="primary" id="login">ĐĂNG NHẬP</button><div id="loginMsg" class="msg"></div>
     </div>
     <div id="adminBox" class="hidden">
-      <div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label></div>
+      <div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label><label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label><label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label><label>Ảnh liên hệ (URL)<input id="supportImageInput" placeholder="https://.../avatar.jpg" type="url"></label></div>
       <div class="section"><b>DANH SÁCH NHÁNH</b><button class="add" id="add">＋ THÊM NHÁNH</button></div>
       <div id="editList"></div>
-      <div class="actions"><button class="secondary" id="logout">Đăng xuất</button><button class="primary" id="save">💾 LƯU</button></div>
+      <div class="section chat-admin-title"><b>HỆ THỐNG BOX CHAT</b><button class="add" id="addChat">＋ THÊM BOX</button></div>
+      <p class="admin-note">Bạn có thể thêm bao nhiêu Box tùy ý. Mỗi Box có tên, nội dung phụ, link tham gia và ảnh riêng.</p>
+      <div id="chatEditList"></div>
+      <div class="actions"><button class="secondary" id="logout">Đăng xuất</button><button class="primary" id="save">💾 LƯU TẤT CẢ</button></div>
     </div>
   </div>
 </div>

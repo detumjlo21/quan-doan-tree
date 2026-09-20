@@ -87,62 +87,73 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
   .veterans .role small{font-size:6.5px}
 }
 
-
-/* ===== MOBILE FINAL FIX ===== */
-@media (max-width: 800px){
-  /* Hiển thị lại menu trên mobile, nằm thành một hàng cuộn ngang dưới header */
-  .topbar{
-    height:auto;
-    min-height:64px;
-    padding:0 10px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:0;
-  }
-  .brand{height:64px;flex:1;min-width:0}
-  .admin-btn{margin-left:8px;flex:0 0 auto}
-  .nav{
-    order:3;
-    display:flex!important;
-    flex:0 0 100%;
-    width:100%;
-    height:40px;
-    min-height:40px;
-    gap:0;
-    overflow-x:auto;
-    overflow-y:hidden;
-    border-top:1px solid #172b44;
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-  }
+/* ===== BOX CHAT ===== */
+.chat-section{max-width:1100px;margin:55px auto 80px;padding:44px 25px;text-align:center;border-top:1px solid #172a41}
+.chat-head small{color:#8295b0;font-size:10px;font-weight:900;letter-spacing:2.4px}
+.chat-head h2{margin:6px 0 8px;color:#dceaff;letter-spacing:2px;font-size:25px}
+.chat-head p{margin:0 0 24px;color:#7890aa;font-size:13px}
+.chat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;text-align:left}
+.chat-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid #205b8f;border-radius:14px;background:linear-gradient(180deg,rgba(10,31,53,.95),rgba(5,18,32,.98));color:#eaf4ff;text-decoration:none;transition:.2s;border-left:3px solid #ff263d}
+.chat-card:hover{transform:translateY(-2px);border-color:#ff3349;box-shadow:0 0 20px rgba(255,30,55,.12)}
+.chat-icon{font-size:24px;color:#55c6ff;text-shadow:0 0 10px rgba(85,198,255,.25)}
+.chat-card small{display:block;color:#7895b4;font-size:8px;font-weight:900;letter-spacing:1.2px;margin-bottom:3px}
+.chat-card b{display:block;font-size:15px}
+.chat-card div>span{display:block;color:#8198b1;font-size:10px;margin-top:4px}
+.chat-empty{padding:20px;color:#7890aa}
+@media(max-width:800px){
+  .nav{display:flex!important;flex:1;min-width:0;gap:15px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start}
   .nav::-webkit-scrollbar{display:none}
-  .nav a{
-    flex:0 0 auto;
-    height:40px;
-    padding:0 12px;
-    font-size:11px;
-    gap:5px;
-  }
-  .nav a.active:after{bottom:0}
-
-  /* Bỏ toàn bộ phần chữ bị gạch; logo được đẩy lên thay vào vị trí đó */
-  .hero-copy{display:none!important}
-  .hero{display:none!important}
-
-  main{padding:20px 8px 38px}
-  .org-tree{padding-top:0}
-  .root-wrap{margin-top:0}
+  .nav a{font-size:11px;gap:5px;padding:0 1px}
+  .topbar{gap:10px}
+  .brand{flex:0 0 auto}
+  .chat-section{margin:35px auto 55px;padding:30px 12px}
+  .chat-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .nav{display:flex!important;gap:13px;max-width:100%;height:33px;align-items:center}
+  .topbar{height:98px;flex-wrap:wrap;padding:0 10px 5px;gap:0;align-content:center}
+  .brand{width:auto}
+  .admin-btn{margin-left:auto}
+  .nav{order:3;width:100%;flex-basis:100%;justify-content:flex-start}
+  .nav a{font-size:10px}
+  .chat-section{padding:26px 10px}
+  .chat-head h2{font-size:21px}
 }
 
-@media (max-width:520px){
-  .topbar{padding:0 9px}
-  .brand{height:62px}
-  .brand img{width:40px;height:40px}
-  .brand-copy b{font-size:16px}
-  .brand-copy span{font-size:7.5px}
-  .admin-btn{height:38px;font-size:11px;padding:0 10px}
-  .nav{height:38px;min-height:38px}
-  .nav a{height:38px;padding:0 10px;font-size:10.5px}
-  main{padding:18px 8px 38px}
-  .root-card{width:min(190px,62vw);height:min(190px,62vw)}
+/* ===== BOX CHAT - STYLE THEO MẪU ===== */
+.chat-section{max-width:980px;margin:55px auto 80px;padding:34px 22px 40px;border-top:1px solid #fff;text-align:center}
+.chat-head h2{margin:0 0 26px;color:#fff;font-size:18px;letter-spacing:.2px}
+.chat-list{display:flex;flex-direction:column;gap:16px;text-align:left}
+.chat-card{min-height:65px;display:flex;align-items:center;gap:16px;padding:9px 16px;border:2px solid #fff;border-radius:17px;background:#1d0004;color:#fff;text-decoration:none;transition:.18s;box-shadow:none}
+.chat-card:hover{transform:translateY(-1px);border-color:#ff3148;box-shadow:0 0 18px rgba(255,30,50,.12)}
+.chat-card img{width:46px;height:46px;flex:0 0 46px;border-radius:10px;object-fit:cover;background:#090909}
+.chat-card b{display:block;font-size:16px;font-weight:500;color:#fff;line-height:21px}
+.chat-card span{display:block;color:#fff;font-size:12px;line-height:16px;margin-top:1px}
+.chat-empty{color:#fff;padding:20px}
+.support-divider{height:1px;background:#fff;margin:48px 0 50px}
+.support-head h3{margin:0 0 14px;color:#fff;font-size:17px;font-weight:800}
+.support-card{min-height:65px;display:flex;align-items:center;justify-content:flex-start;gap:18px;padding:8px 16px;border:2px solid #fff;border-radius:17px;background:#1d0004;color:#fff;text-decoration:none}
+.support-card img{width:46px;height:46px;border-radius:50%;object-fit:cover}.support-card span{font-size:15px;font-weight:500;display:block;width:100%;text-align:center;margin-left:-46px}
+.chat-admin-title{margin-top:28px}.admin-note{color:#8295b0;font-size:11px;margin:-3px 0 10px}.chat-edit{background:#14070a;border:1px solid #5c2831;border-radius:13px;padding:14px;margin:10px 0}.chat-edit input{background:#080306;border-color:#63303a}
+
+/* Mobile: giữ menu ngang như yêu cầu trước */
+@media(max-width:800px){
+ .nav{display:flex!important;flex:1;min-width:0;gap:13px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start}.nav::-webkit-scrollbar{display:none}.nav a{font-size:11px;gap:5px;padding:0 1px;white-space:nowrap}
+ .topbar{gap:10px}.chat-section{margin:30px auto 55px;padding:30px 12px 36px}.chat-list{gap:15px}.chat-card{min-height:64px;padding:8px 12px}.chat-card b{font-size:15px}.chat-card span{font-size:11px}.support-card{min-height:64px}
+}
+@media(max-width:520px){
+ .topbar{height:98px;flex-wrap:wrap;padding:0 10px 5px;align-content:center}.brand{width:auto}.admin-btn{margin-left:auto}.nav{order:3;width:100%;flex-basis:100%;height:33px;align-items:center;gap:13px;max-width:100%}.nav a{font-size:10px}
+ .chat-section{padding:26px 10px 34px;margin-top:28px}.chat-head h2{font-size:17px;margin-bottom:22px}.chat-list{gap:15px}.chat-card{border-radius:16px;padding:8px 13px}.chat-card img{width:44px;height:44px;flex-basis:44px}.chat-card b{font-size:15px}.chat-card span{font-size:11px}.support-divider{margin:42px 0 46px}.support-head h3{font-size:16px}.support-card{border-radius:16px}.support-card span{font-size:14px}
+}
+
+/* ===== TREE SAFETY / FINAL MOBILE FIX ===== */
+.org-tree{display:block!important;visibility:visible!important;opacity:1!important}
+.branches{display:grid!important}
+.branch{display:block!important;visibility:visible!important}
+@media(max-width:520px){
+  .org-tree{padding-top:0}
+  .branches{grid-template-columns:1fr!important;gap:18px!important}
+  .branch-card{width:100%;box-sizing:border-box}
+  .veterans{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important}
+  .veterans .role{height:82px!important;min-height:82px!important;box-sizing:border-box!important}
 }
