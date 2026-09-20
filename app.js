@@ -56,7 +56,11 @@ function renderChat(){
   const el=$("#chatBranches");if(!el)return;
   el.innerHTML=data.chatBoxes.length?data.chatBoxes.map((b,i)=>{const link=safeUrl(b.link_url);return `<a class="chat-card" href="${esc(link)}" ${link!=="#"?'target="_blank" rel="noopener noreferrer"':''}><img src="${esc(safeUrl(b.image_url||"logo-quant-doan.jpg","logo-quant-doan.jpg"))}" alt=""><div><b>${esc(b.title||`BOX ${i+1}`)}</b><span>${esc(b.subtitle||"")}</span></div></a>`}).join(""):"<div class="chat-empty">Chưa có Box Chat.</div>";
 }
-function renderSupport(){const c=$("#supportCard");c.href=safeUrl(data.support.link);$("#supportImage").src=safeUrl(data.support.image,"logo-quant-doan.jpg");$("#supportLabel").textContent=data.support.label||"LIÊN HỆ FB"}
+function renderSupport(){
+  const c=$("#supportCard"), img=$("#supportImage"), label=$("#supportLabel");
+  if(!c||!img||!label)return;
+  c.href=safeUrl(data.support.link); img.src=safeUrl(data.support.image,"logo-quant-doan.jpg"); label.textContent=data.support.label||"LIÊN HỆ FB";
+}
 function setupNav(){const links=[...document.querySelectorAll('.nav a')];links.forEach(a=>a.addEventListener('click',()=>{links.forEach(x=>x.classList.remove('active'));a.classList.add('active')}));const targets=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){const active=links.find(a=>a.getAttribute('href')==='#'+entry.target.id);if(active){links.forEach(x=>x.classList.remove('active'));active.classList.add('active')}}}),{rootMargin:'-35% 0px -55% 0px',threshold:0});targets.forEach(t=>observer.observe(t))}
 function openAdmin(){$("#modal").classList.remove("hidden");checkUser()}
 async function checkUser(){const {data:{user}}=await db.auth.getUser();$("#loginBox").classList.toggle("hidden",!!user);$("#adminBox").classList.toggle("hidden",!user);if(user)buildEditors()}
@@ -78,4 +82,13 @@ async function delBranch(id){if(!confirm("Xóa nhánh này?"))return;const {erro
 async function addChat(){const {data:{user}}=await db.auth.getUser();if(!user)return;const next=data.chatBoxes.length+1;const {error}=await db.from("quan_doan_chat_boxes").insert({title:`Box mới ${next}`,subtitle:"",image_url:"logo-quant-doan.jpg",link_url:"#",sort_order:next});if(error)alert(error.message);else{await load();buildEditors()}}
 async function delChat(id){if(!confirm("Xóa Box Chat này?"))return;const {error}=await db.from("quan_doan_chat_boxes").delete().eq("id",id);if(error)alert(error.message);else{await load();buildEditors()}}
 window.delBranch=delBranch;window.delChat=delChat;
-$("#adminBtn").onclick=openAdmin;$("#close").onclick=()=>$("#modal").classList.add("hidden");$("#login").onclick=login;$("#save").onclick=saveAll;$("#add").onclick=addBranch;$("#addChat").onclick=addChat;$("#logout").onclick=async()=>{await db.auth.signOut();checkUser()};$("#password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});setupNav();load();
+const adminBtn=$("#adminBtn"); if(adminBtn) adminBtn.addEventListener("click",openAdmin);
+const closeBtn=$("#close"); if(closeBtn) closeBtn.addEventListener("click",()=>$("#modal").classList.add("hidden"));
+const loginBtn=$("#login"); if(loginBtn) loginBtn.addEventListener("click",login);
+const saveBtn=$("#save"); if(saveBtn) saveBtn.addEventListener("click",saveAll);
+const addBtn=$("#add"); if(addBtn) addBtn.addEventListener("click",addBranch);
+const addChatBtn=$("#addChat"); if(addChatBtn) addChatBtn.addEventListener("click",addChat);
+const logoutBtn=$("#logout"); if(logoutBtn) logoutBtn.addEventListener("click",async()=>{await db.auth.signOut();checkUser()});
+const passwordInput=$("#password"); if(passwordInput) passwordInput.addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+// Không phụ thuộc menu/nav; trang này chỉ hiển thị cây tổ chức.
+load();
