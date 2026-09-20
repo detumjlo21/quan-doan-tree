@@ -196,7 +196,7 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
   }
 }
 
-/* ===== PC OVERFLOW FIX ===== */
+/* ===== PC FINAL NAME FIT ===== */
 @media (min-width: 801px){
   .branch-card,
   .veterans,
@@ -209,22 +209,31 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
   .veterans{
     width: 100%;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .veterans .role{
     width: 100%;
     max-width: 100%;
     overflow: hidden;
+    padding-left: 2px;
+    padding-right: 2px;
   }
 
-  .veterans .role b,
-  .role b{
+  /* Không cắt tên bằng ...: thu nhỏ chữ để tên vẫn hiện đầy đủ trong ô */
+  .veterans .role b{
     display: block;
+    width: 100%;
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
+    text-overflow: clip;
+    font-size: 10px;
+    line-height: 13px;
+    letter-spacing: -0.2px;
+    transform: scaleX(.92);
+    transform-origin: center;
   }
 }
