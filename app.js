@@ -61,7 +61,15 @@ function render(){
 function role(i,l,n,cls=""){return `<div class="role ${cls}"><div class="ico">${i}</div><small>${l}</small><b>${esc(n||"Chưa cập nhật")}</b></div>`}
 function renderChat(){
   const el=$("#chatBranches");if(!el)return;
-  el.innerHTML=data.chatBoxes.length?data.chatBoxes.map((b,i)=>{const link=safeUrl(b.link_url);return `<a class="chat-card" href="${esc(link)}" ${link!=="#"?'target="_blank" rel="noopener noreferrer"':''}><img src="${esc(safeUrl(b.image_url||"logo-quant-doan.jpg","logo-quant-doan.jpg"))}" alt=""><div><b>${esc(b.title||`BOX ${i+1}`)}</b><span>${esc(b.subtitle||"")}</span></div></a>`}).join(""):"<div class="chat-empty">Chưa có Box Chat.</div>";
+  if(!data.chatBoxes.length){el.innerHTML='<div class="chat-empty">Chưa có Box Chat.</div>';return;}
+  el.innerHTML=data.chatBoxes.map((b,i)=>{
+    const link=safeUrl(b.link_url);
+    const target=link!=="#"?' target="_blank" rel="noopener noreferrer"':'';
+    const img=esc(safeUrl(b.image_url||"logo-quant-doan.jpg","logo-quant-doan.jpg"));
+    const title=esc(b.title||("BOX "+(i+1)));
+    const subtitle=esc(b.subtitle||"");
+    return '<a class="chat-card" href="'+esc(link)+'"'+target+'><img src="'+img+'" alt=""><div><b>'+title+'</b><span>'+subtitle+'</span></div></a>';
+  }).join("");
 }
 function renderSupport(){const c=$("#supportCard");c.href=safeUrl(data.support.link);$("#supportImage").src=safeUrl(data.support.image,"logo-quant-doan.jpg");$("#supportLabel").textContent=data.support.label||"LIÊN HỆ FB"}
 function setupNav(){const links=[...document.querySelectorAll('.nav a')];links.forEach(a=>a.addEventListener('click',()=>{links.forEach(x=>x.classList.remove('active'));a.classList.add('active')}));const targets=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){const active=links.find(a=>a.getAttribute('href')==='#'+entry.target.id);if(active){links.forEach(x=>x.classList.remove('active'));active.classList.add('active')}}}),{rootMargin:'-35% 0px -55% 0px',threshold:0});targets.forEach(t=>observer.observe(t))}

@@ -157,3 +157,8 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
   .veterans{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important}
   .veterans .role{height:82px!important;min-height:82px!important;box-sizing:border-box!important}
 }
+
+/* ===== ADMIN BUTTON AT BOTTOM ===== */
+.admin-footer{display:flex;justify-content:center;padding:10px 16px 42px}
+.admin-footer .admin-btn{margin:0}
+@media(max-width:520px){.admin-footer{padding:8px 12px 32px}.admin-footer .admin-btn{height:40px;font-size:11px}}
