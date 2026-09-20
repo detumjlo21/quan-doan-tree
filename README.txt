@@ -1,17 +1,13 @@
-# Web Cây Chức Vụ Quân Đoàn
+# PHOENIX - Cây Chức Vụ + Supabase
 
-## Chạy
-Mở `index.html` bằng Chrome/Edge.
+1. Mở Supabase > SQL Editor.
+2. Dán toàn bộ `supabase.sql` và Run.
+3. Vào Authentication > Users > Add user, tạo email + mật khẩu Admin.
+4. Upload `index.html`, `style.css`, `app.js` lên GitHub Pages.
+5. Mở web > ADMIN > đăng nhập tài khoản vừa tạo.
 
-## Có sẵn
-- Hiển thị đồng thời tất cả nhánh.
-- Mặc định 5 nhánh.
-- Mỗi nhánh có 1 Chủ Quân Đoàn, 1 Quyền Chủ QĐ và 3 Kỳ Cựu.
-- Admin chỉnh tên quân đoàn và thông tin từng nhánh.
-- Nút Thêm Nhánh.
-- Xóa nhánh.
-- Dữ liệu lưu bằng localStorage của trình duyệt.
-- Responsive cho PC/mobile.
-
-## Lưu ý
-Bản này là bản frontend demo. Dữ liệu chỉ nằm trên trình duyệt hiện tại. Nếu cần nhiều người cùng truy cập và Admin cập nhật cho tất cả mọi người, cần nối backend/database.
+Quan trọng:
+- `sb_publishable_...` có thể dùng ở frontend.
+- KHÔNG đưa `service_role`/secret key lên GitHub.
+- Bản này cho phép mọi người đọc cây, nhưng chỉ user đăng nhập mới ghi dữ liệu.
+- Nếu muốn chỉ MỘT email cụ thể được phép sửa, cần thêm bảng `admins` + policy kiểm tra user id/email. Bản hiện tại coi mọi tài khoản Supabase Auth đăng nhập là Admin.

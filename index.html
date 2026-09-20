@@ -1,75 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quân Đoàn - Cây Chức Vụ</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PHOENIX - Cây Chức Vụ</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<div class="bg-glow"></div>
-
-<header class="topbar">
-  <div>
-    <div class="eyebrow">QUÂN ĐOÀN</div>
-    <h1 id="headerName">PHOENIX</h1>
-  </div>
-  <button class="admin-btn" id="openAdmin">⚙ ADMIN</button>
-</header>
-
-<main class="container">
-  <section class="hero">
-    <div class="hero-badge">🌳</div>
-    <div>
-      <p class="eyebrow">SƠ ĐỒ TỔ CHỨC</p>
-      <h2>CÂY CHỨC VỤ QUÂN ĐOÀN</h2>
-      <p class="muted">Tất cả các nhánh được hiển thị đồng thời</p>
-    </div>
-  </section>
-
-  <section class="commander-wrap">
-    <div class="person-card leader">
-      <div class="avatar" id="mainAvatar">👑</div>
-      <div class="rank">QUÂN ĐOÀN TỔNG</div>
-      <div class="person-name" id="mainName">PHOENIX</div>
-      <div class="small">Quản lý toàn bộ hệ thống</div>
-    </div>
-    <div class="connector vertical"></div>
-  </section>
-
-  <section id="branches" class="branches"></section>
+<header class="topbar"><div><b>🌳 PHOENIX</b><span>CÂY CHỨC VỤ</span></div><button id="adminBtn">⚙ ADMIN</button></header>
+<main>
+<section class="hero"><div>🌳</div><article><small>SƠ ĐỒ TỔ CHỨC</small><h1 id="title">CÂY CHỨC VỤ QUÂN ĐOÀN</h1><p>Hiển thị toàn bộ các nhánh</p></article></section>
+<section class="root"><div class="card rootcard"><div class="avatar">👑</div><small>QUÂN ĐOÀN TỔNG</small><strong id="qdanName">PHOENIX</strong></div></section>
+<div id="branches" class="branches"></div>
 </main>
 
-<div class="modal hidden" id="adminModal">
-  <div class="modal-card">
-    <div class="modal-head">
-      <div>
-        <div class="eyebrow">ADMIN PANEL</div>
-        <h2>Quản lý cây chức vụ</h2>
-      </div>
-      <button class="icon-btn" id="closeAdmin">✕</button>
-    </div>
-
-    <div class="settings">
-      <label>Tên Quân Đoàn
-        <input id="settingsName" type="text" placeholder="Tên quân đoàn">
-      </label>
-    </div>
-
-    <div class="section-title">
-      <span>DANH SÁCH NHÁNH</span>
-      <button class="add-btn" id="addBranch">＋ THÊM NHÁNH</button>
-    </div>
-
-    <div id="adminBranches"></div>
-
-    <div class="modal-actions">
-      <button class="secondary" id="resetData">Khôi phục mẫu</button>
-      <button class="primary" id="saveData">💾 LƯU THAY ĐỔI</button>
-    </div>
-  </div>
+<div id="modal" class="modal hidden"><div class="panel">
+<div class="panelhead"><div><small>ADMIN</small><h2>Quản lý cây chức vụ</h2></div><button id="close">✕</button></div>
+<div id="loginBox">
+<p>Đăng nhập tài khoản Admin Supabase.</p>
+<input id="email" type="email" placeholder="Email Admin">
+<input id="password" type="password" placeholder="Mật khẩu">
+<button class="primary" id="login">ĐĂNG NHẬP</button>
+<div id="loginMsg" class="msg"></div>
 </div>
-
+<div id="adminBox" class="hidden">
+<div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label></div>
+<div class="section"><b>DANH SÁCH NHÁNH</b><button class="add" id="add">＋ THÊM NHÁNH</button></div>
+<div id="editList"></div>
+<div class="actions"><button class="secondary" id="logout">Đăng xuất</button><button class="primary" id="save">💾 LƯU</button></div>
+</div>
+</div></div>
 <script src="app.js"></script>
 </body>
 </html>

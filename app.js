@@ -1,71 +1,68 @@
-const KEY="phoenix_quan_doan_tree_v1";
+const SUPABASE_URL="https://efpjutcrtgqiebghlsob.supabase.co";
+const SUPABASE_KEY="sb_publishable_yKfKA7JVKDTwFD4jCTUboQ_W81l1Ftw";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let data={name:"PHOENIX",branches:[]};
 
-const defaultData={
- name:"PHOENIX",
- branches:[
-  {name:"NHÁNH 1",owner:"Chủ Nhánh 1",deputy:"Quyền Chủ 1",vets:["Kỳ Cựu 1","Kỳ Cựu 2","Kỳ Cựu 3"]},
-  {name:"NHÁNH 2",owner:"Chủ Nhánh 2",deputy:"Quyền Chủ 2",vets:["Kỳ Cựu 1","Kỳ Cựu 2","Kỳ Cựu 3"]},
-  {name:"NHÁNH 3",owner:"Chủ Nhánh 3",deputy:"Quyền Chủ 3",vets:["Kỳ Cựu 1","Kỳ Cựu 2","Kỳ Cựu 3"]},
-  {name:"NHÁNH 4",owner:"Chủ Nhánh 4",deputy:"Quyền Chủ 4",vets:["Kỳ Cựu 1","Kỳ Cựu 2","Kỳ Cựu 3"]},
-  {name:"NHÁNH 5",owner:"Chủ Nhánh 5",deputy:"Quyền Chủ 5",vets:["Kỳ Cựu 1","Kỳ Cựu 2","Kỳ Cựu 3"]}
- ]};
-
-let data=load();
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||structuredClone(defaultData)}catch{return structuredClone(defaultData)}}
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+async function load(){
+ const {data:r,error}=await db.from("quan_doan_settings").select("*").eq("id",1).maybeSingle();
+ if(error){console.error(error);return}
+ if(r)data.name=r.name||"PHOENIX";
+ const {data:b,error:e}=await db.from("quan_doan_branches").select("*").order("sort_order",{ascending:true});
+ if(e){console.error(e);return}
+ data.branches=b||[]; render();
+}
 function render(){
- $("#headerName").textContent=data.name||"QUÂN ĐOÀN";
- $("#mainName").textContent=data.name||"QUÂN ĐOÀN";
- const box=$("#branches");
- if(!data.branches.length){box.innerHTML='<div class="empty">Chưa có nhánh nào. Vào Admin để thêm nhánh.</div>';return}
- box.innerHTML=data.branches.map((b,i)=>`
-  <article class="branch">
-   <div class="branch-title">🌳 ${esc(b.name)}</div>
-   ${role("👑","CHỦ QUÂN ĐOÀN",b.owner)}
-   ${role("⭐","QUYỀN CHỦ QĐ",b.deputy)}
-   ${b.vets.map((v,j)=>role("🛡️","KỲ CỰU "+(j+1),v)).join("")}
-  </article>`).join("");
+ $("#qdanName").textContent=data.name;
+ $("#branches").innerHTML=data.branches.length?data.branches.map(b=>`
+ <article class="branch"><div class="branch-title">🌳 ${esc(b.name)}</div>
+ ${role("👑","CHỦ QUÂN ĐOÀN",b.owner_name)}
+ ${role("⭐","QUYỀN CHỦ QĐ",b.deputy_name)}
+ ${role("🛡️","KỲ CỰU 1",b.veteran1)}
+ ${role("🛡️","KỲ CỰU 2",b.veteran2)}
+ ${role("🛡️","KỲ CỰU 3",b.veteran3)}</article>`).join(""):"<p>Chưa có nhánh.</p>";
 }
-function role(icon,label,name){return `<div class="role"><div class="icon">${icon}</div><div class="role-name">${label}</div><div class="name">${esc(name)}</div></div>`}
-
-function openAdmin(){
- $("#settingsName").value=data.name||"";
- $("#adminBranches").innerHTML=data.branches.map((b,i)=>editor(b,i)).join("");
- $("#adminModal").classList.remove("hidden");
+function role(i,l,n){return `<div class="role"><div class="ico">${i}</div><small>${l}</small><b>${esc(n||"Chưa cập nhật")}</b></div>`}
+function openAdmin(){ $("#modal").classList.remove("hidden"); checkUser(); }
+async function checkUser(){
+ const {data:{user}}=await db.auth.getUser();
+ $("#loginBox").classList.toggle("hidden",!!user);$("#adminBox").classList.toggle("hidden",!user);
+ if(user) buildEditors();
 }
-function editor(b,i){
- return `<div class="branch-editor" data-index="${i}">
-   <div class="branch-editor-head"><strong>🌳 NHÁNH ${i+1}</strong><button class="delete" onclick="deleteBranch(${i})">XÓA NHÁNH</button></div>
-   <div class="role-grid">
-    <label class="wide">Tên nhánh<input data-field="name" value="${esc(b.name)}"></label>
-    <label>👑 Chủ Quân Đoàn<input data-field="owner" value="${esc(b.owner)}"></label>
-    <label>⭐ Quyền Chủ QĐ<input data-field="deputy" value="${esc(b.deputy)}"></label>
-    <label>🛡️ Kỳ cựu 1<input data-vet="0" value="${esc(b.vets[0]||"")}"></label>
-    <label>🛡️ Kỳ cựu 2<input data-vet="1" value="${esc(b.vets[1]||"")}"></label>
-    <label>🛡️ Kỳ cựu 3<input data-vet="2" value="${esc(b.vets[2]||"")}"></label>
-   </div>
-  </div>`
+function buildEditors(){
+ $("#qdanInput").value=data.name;
+ $("#editList").innerHTML=data.branches.map((b,i)=>`<div class="branch-edit" data-id="${b.id}">
+ <div class="branch-edit-head"><b>🌳 NHÁNH ${i+1}</b><button class="delete" onclick="delBranch('${b.id}')">XÓA</button></div>
+ <div class="grid">
+ <label class="wide">Tên nhánh<input data-f="name" value="${esc(b.name)}"></label>
+ <label>👑 Chủ Quân Đoàn<input data-f="owner_name" value="${esc(b.owner_name)}"></label>
+ <label>⭐ Quyền Chủ QĐ<input data-f="deputy_name" value="${esc(b.deputy_name)}"></label>
+ <label>🛡️ Kỳ cựu 1<input data-f="veteran1" value="${esc(b.veteran1)}"></label>
+ <label>🛡️ Kỳ cựu 2<input data-f="veteran2" value="${esc(b.veteran2)}"></label>
+ <label>🛡️ Kỳ cựu 3<input data-f="veteran3" value="${esc(b.veteran3)}"></label>
+ </div></div>`).join("");
 }
-function collect(){
- data.name=$("#settingsName").value.trim()||"QUÂN ĐOÀN";
- [...$("#adminBranches").children].forEach((el,i)=>{
-   const b=data.branches[i];
-   b.name=el.querySelector('[data-field="name"]').value.trim()||`NHÁNH ${i+1}`;
-   b.owner=el.querySelector('[data-field="owner"]').value.trim()||"Chưa cập nhật";
-   b.deputy=el.querySelector('[data-field="deputy"]').value.trim()||"Chưa cập nhật";
-   b.vets=[0,1,2].map(j=>el.querySelector(`[data-vet="${j}"]`).value.trim()||"Chưa cập nhật");
- });
+async function login(){
+ $("#loginMsg").textContent="";
+ const {error}=await db.auth.signInWithPassword({email:$("#email").value.trim(),password:$("#password").value});
+ if(error)$("#loginMsg").textContent=error.message;else{await load();checkUser()}
 }
-function deleteBranch(i){
- if(confirm(`Xóa ${data.branches[i].name}?`)){data.branches.splice(i,1);openAdmin()}
+async function saveAll(){
+ const {data:{user}}=await db.auth.getUser();if(!user)return;
+ await db.from("quan_doan_settings").upsert({id:1,name:$("#qdanInput").value.trim()||"PHOENIX"});
+ const rows=[...$("#editList").children].map(el=>{const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());return {id:el.dataset.id,...o}});
+ for(const r of rows){const {id,...changes}=r;await db.from("quan_doan_branches").update(changes).eq("id",id)}
+ await load();buildEditors();alert("Đã lưu thành công.");
 }
-$("#openAdmin").onclick=openAdmin;
-$("#closeAdmin").onclick=()=>$("#adminModal").classList.add("hidden");
-$("#saveData").onclick=()=>{collect();save();$("#adminModal").classList.add("hidden")};
-$("#addBranch").onclick=()=>{collect();data.branches.push({name:`NHÁNH ${data.branches.length+1}`,owner:"Chủ Nhánh",deputy:"Quyền Chủ",vets:["Kỳ Cựu 1","Kỳ Cựu 2","Kỳ Cựu 3"]});openAdmin()};
-$("#resetData").onclick=()=>{if(confirm("Khôi phục dữ liệu mẫu?")){data=structuredClone(defaultData);openAdmin()}};
-$("#adminModal").addEventListener("click",e=>{if(e.target.id==="adminModal")$("#adminModal").classList.add("hidden")});
-render();
+async function addBranch(){
+ const {data:{user}}=await db.auth.getUser();if(!user)return;
+ const next=data.branches.length+1;
+ const {error}=await db.from("quan_doan_branches").insert({name:`NHÁNH ${next}`,sort_order:next,owner_name:"Chủ Nhánh",deputy_name:"Quyền Chủ",veteran1:"Kỳ Cựu 1",veteran2:"Kỳ Cựu 2",veteran3:"Kỳ Cựu 3"});
+ if(error)alert(error.message);else{await load();buildEditors()}
+}
+async function delBranch(id){if(!confirm("Xóa nhánh này?"))return;const {error}=await db.from("quan_doan_branches").delete().eq("id",id);if(error)alert(error.message);else{await load();buildEditors()}}
+$("#adminBtn").onclick=openAdmin;$("#close").onclick=()=>$("#modal").classList.add("hidden");$("#login").onclick=login;$("#save").onclick=saveAll;$("#add").onclick=addBranch;
+$("#logout").onclick=async()=>{await db.auth.signOut();checkUser()};
+$("#password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+load();
