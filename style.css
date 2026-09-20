@@ -157,18 +157,3 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
   .veterans{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important}
   .veterans .role{height:82px!important;min-height:82px!important;box-sizing:border-box!important}
 }
-
-
-/* ===== PHOENIX ONLY: CHỈ CÂY TỔ CHỨC + ADMIN Ở CUỐI TRANG ===== */
-.topbar{justify-content:flex-start}
-.topbar .brand{margin-right:auto}
-.nav{display:none!important}
-.site-footer{display:flex;justify-content:center;align-items:center;padding:18px 16px 35px;margin-top:8px}
-.bottom-admin{min-width:210px;height:44px}
-@media(max-width:520px){
-  .topbar{height:64px;padding:0 12px}
-  main{padding:22px 8px 18px}
-  .root-card{width:min(190px,62vw);height:min(190px,62vw)}
-  .site-footer{padding:16px 12px 28px}
-  .bottom-admin{width:min(240px,92vw);height:44px;font-size:12px}
-}
