@@ -56,7 +56,7 @@ async function load(){
   }
 }
 function render(){
-  $("#branches").innerHTML=data.branches.length?data.branches.map((b,i)=>`<article class="branch"><div class="branch-title"><span class="tree-icon">♟</span> ${esc(b.name||`NHÁNH ${i+1}`)}</div><div class="branch-card">${role("♛","CHỦ QUÂN ĐOÀN",b.owner_name,"owner-role")}${role("★","QUYỀN CHỦ QĐ",b.deputy_name,"deputy-role")}<div class="veterans">${role("⬟","KỲ CỰU 1",b.veteran1)}${role("⬟","KỲ CỰU 2",b.veteran2)}${role("⬟","KỲ CỰU 3",b.veteran3)}</div></div></article>`).join(""):"<p>Chưa có nhánh.</p>";
+  $("#branches").innerHTML=data.branches.length?data.branches.map((b,i)=>`<article class="branch"><div class="branch-title"><span class="tree-icon">♟</span> ${esc(b.name||`NHÁNH ${i+1}`)}</div><div class="branch-card">${role("♛","CHỦ QUÂN ĐOÀN",b.owner_name,"owner-role")}${role("★","QUYỀN CHỦ QĐ",b.deputy_name,"deputy-role")}<div class="veterans">${role("🎖️","KỲ CỰU 1",b.veteran1)}${role("🎖️","KỲ CỰU 2",b.veteran2)}${role("🎖️","KỲ CỰU 3",b.veteran3)}</div></div></article>`).join(""):"<p>Chưa có nhánh.</p>";
 }
 function role(i,l,n,cls=""){return `<div class="role ${cls}"><div class="ico">${i}</div><small>${l}</small><b>${esc(n||"Chưa cập nhật")}</b></div>`}
 function renderChat(){
