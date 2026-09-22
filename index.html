@@ -59,7 +59,7 @@
       <button class="primary" id="login">ĐĂNG NHẬP</button><div id="loginMsg" class="msg"></div>
     </div>
     <div id="adminBox" class="hidden">
-      <div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label><label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label><label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label><label>Ảnh liên hệ (URL)<input id="supportImageInput" placeholder="https://.../avatar.jpg" type="url"></label></div>
+      <div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label><label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label><label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label><label class="wide support-image-admin">🖼️ Ảnh liên hệ Facebook <span class="upload-hint">(chọn ảnh trực tiếp)</span><input id="supportImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><span id="supportUploadStatus" class="upload-status" aria-live="polite"></span><img id="supportImagePreview" class="support-image-preview" src="logo-quant-doan.jpg" alt="Xem trước ảnh liên hệ"><input id="supportImageInput" placeholder="URL ảnh sau khi tải lên" type="url"></label></div>
       <div class="section"><b>DANH SÁCH NHÁNH</b><button class="add" id="add">＋ THÊM NHÁNH</button></div>
       <div id="editList"></div>
       <div class="section chat-admin-title"><b>HỆ THỐNG BOX CHAT</b><button class="add" id="addChat">⚙ 6 BOX CỐ ĐỊNH</button></div>

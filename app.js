@@ -151,6 +151,10 @@ function buildEditors(){
   document.querySelectorAll('.chat-image-file').forEach(input=>{
     input.addEventListener('change',()=>uploadChatImage(input));
   });
+  const supportFile=$("#supportImageFile");
+  if(supportFile) supportFile.addEventListener('change',()=>uploadSupportImage(supportFile));
+  const supportPreview=$("#supportImagePreview");
+  if(supportPreview) supportPreview.src=safeUrl(data.support.image,"logo-quant-doan.jpg");
 }
 async function uploadChatImage(input){
   const file=input.files?.[0];
@@ -178,6 +182,31 @@ async function uploadChatImage(input){
     console.error(err);
     if(status)status.textContent='❌ Tải ảnh thất bại';
     alert('Không tải được ảnh Box: '+(err.message||err)+"\n\nHãy chạy phần SQL tạo Storage trong file supabase.sql rồi thử lại.");
+  }
+}
+async function uploadSupportImage(input){
+  const file=input.files?.[0];
+  if(!file)return;
+  if(!db){alert('Supabase chưa kết nối.');input.value='';return;}
+  if(!/^image\/(png|jpeg|webp|gif)$/i.test(file.type)){alert('Chỉ nhận PNG, JPG, WEBP hoặc GIF.');input.value='';return;}
+  if(file.size>5*1024*1024){alert('Ảnh tối đa 5MB.');input.value='';return;}
+  const status=$("#supportUploadStatus"), preview=$("#supportImagePreview"), urlInput=$("#supportImageInput");
+  if(status)status.textContent='⏳ Đang tải ảnh...';
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+  const path=`support/${Date.now()}-${crypto.randomUUID?.()||Math.random().toString(36).slice(2)}.${ext}`;
+  try{
+    const {error}=await db.storage.from('chat-box-images').upload(path,file,{contentType:file.type,upsert:false,cacheControl:'3600'});
+    if(error)throw error;
+    const {data:pub}=db.storage.from('chat-box-images').getPublicUrl(path);
+    const url=pub?.publicUrl||'';
+    if(!url)throw new Error('Không lấy được URL ảnh công khai.');
+    if(urlInput)urlInput.value=url;
+    if(preview)preview.src=url;
+    if(status)status.textContent='✅ Đã tải ảnh. Bấm LƯU TẤT CẢ để lưu ảnh liên hệ.';
+  }catch(err){
+    console.error(err);
+    if(status)status.textContent='❌ Tải ảnh thất bại';
+    alert('Không tải được ảnh liên hệ: '+(err.message||err)+"\n\nHãy kiểm tra Storage bucket chat-box-images và quyền upload trong Supabase.");
   }
 }
 async function login(){

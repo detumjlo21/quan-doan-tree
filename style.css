@@ -326,3 +326,9 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
 .support-contact img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#080b0f;border:1px solid #315f82}
 .support-arrow{color:#65c9ff;font-size:15px}
 @media(max-width:520px){.support-section{padding:0 9px;margin-bottom:18px}.support-card-wrap{padding:22px 12px}.support-card-wrap h2{font-size:16px}.support-card-wrap p{font-size:10px}}
+
+/* Upload ảnh liên hệ Facebook trực tiếp trong Admin */
+.support-image-admin{display:block}
+#supportImageFile{padding:8px!important;cursor:pointer}
+.support-image-preview{display:block;width:72px;height:72px;object-fit:cover;border-radius:50%;border:1px solid #315f82;margin-top:8px;background:#080b0f}
+#supportImageInput{margin-top:8px}
