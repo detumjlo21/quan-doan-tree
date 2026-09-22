@@ -6,7 +6,19 @@ let data={name:"PHOENIX",branches:[],chatBoxes:[],support:{link:"#",label:"LIÊN
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 const safeUrl=(url,fallback="#")=>{const v=String(url||"").trim(); if(!v)return fallback; if(v.startsWith("/")||v.startsWith("./")||v.startsWith("../"))return v; try{const u=new URL(v,location.href); return ["http:","https:"].includes(u.protocol)?u.href:fallback}catch{return fallback}};
-const defaultBoxes=()=>data.branches.map((b,i)=>({id:`fallback-${i}`,title:b.name||`PHOENIX 禄 ( Nhánh ${i+1} )`,subtitle:"",image:"logo-quant-doan.jpg",link:"#",sort_order:i+1}));
+const defaultBoxes=()=>{
+  const total={id:"fallback-chat-total",title:"Box Tổng ( 5 Nhánh )",subtitle:"Tham gia cộng đồng PHOENIX",image_url:"logo-quant-doan.jpg",link_url:"#",sort_order:1};
+  const branches=data.branches.map((b,i)=>({id:`fallback-chat-${i+1}`,title:`PHOENIX 禄 ( Nhánh ${i+1} )`,subtitle:b.name||`Nhánh ${i+1}`,image_url:"logo-quant-doan.jpg",link_url:"#",sort_order:i+2}));
+  return [total,...branches];
+};
+const normalizeChatBoxes=()=>{
+  const fallback=defaultBoxes();
+  const existing=Array.isArray(data.chatBoxes)?data.chatBoxes:[];
+  return fallback.map((f,i)=>{
+    const e=existing[i];
+    return e?{...f,...e,sort_order:i+1}:f;
+  });
+};
 
 const fallbackBranches=()=>[1,2,3,4,5].map((n)=>({
   id:`fallback-branch-${n}`,
@@ -24,6 +36,8 @@ async function load(){
   if(!Array.isArray(data.branches)||!data.branches.length) data.branches=fallbackBranches();
   render();
   if(!db){
+    data.chatBoxes=defaultBoxes();
+    renderChat();
     console.warn("Supabase chưa tải được. Đang hiển thị cây mặc định.");
     return;
   }
@@ -44,11 +58,11 @@ async function load(){
     }
     render();
 
-    // Box Chat chỉ dùng trong Admin, không ảnh hưởng tới cây tổ chức.
-    if(document.querySelector("#chatEditList")){
-      const {data:c,error:ce}=await db.from("quan_doan_chat_boxes").select("*").order("sort_order",{ascending:true});
-      if(ce) data.chatBoxes=defaultBoxes(); else data.chatBoxes=c||[];
-    }
+    // Box Chat: luôn hiển thị 1 Box Tổng + 1 Box cho từng nhánh.
+    const {data:c,error:ce}=await db.from("quan_doan_chat_boxes").select("*").order("sort_order",{ascending:true});
+    if(ce) data.chatBoxes=defaultBoxes(); else data.chatBoxes=normalizeChatBoxes();
+    renderChat();
+    if(document.querySelector("#chatEditList")) buildEditors();
   }catch(err){
     console.error("Lỗi tải dữ liệu:",err);
     if(!data.branches?.length) data.branches=fallbackBranches();
@@ -61,14 +75,16 @@ function render(){
 function role(i,l,n,cls=""){return `<div class="role ${cls}"><div class="ico">${i}</div><small>${l}</small><b>${esc(n||"Chưa cập nhật")}</b></div>`}
 function renderChat(){
   const el=$("#chatBranches");if(!el)return;
-  if(!data.chatBoxes.length){el.innerHTML='<div class="chat-empty">Chưa có Box Chat.</div>';return;}
-  el.innerHTML=data.chatBoxes.map((b,i)=>{
+  const boxes=normalizeChatBoxes();
+  data.chatBoxes=boxes;
+  el.innerHTML=boxes.map((b,i)=>{
     const link=safeUrl(b.link_url);
     const target=link!=="#"?' target="_blank" rel="noopener noreferrer"':'';
     const img=esc(safeUrl(b.image_url||"logo-quant-doan.jpg","logo-quant-doan.jpg"));
-    const title=esc(b.title||("BOX "+(i+1)));
-    const subtitle=esc(b.subtitle||"");
-    return '<a class="chat-card" href="'+esc(link)+'"'+target+'><img src="'+img+'" alt=""><div><b>'+title+'</b><span>'+subtitle+'</span></div></a>';
+    const isTotal=i===0;
+    const title=esc(b.title||(isTotal?"Box Tổng ( 5 Nhánh )":`PHOENIX 禄 ( Nhánh ${i} )`));
+    const subtitle=esc(b.subtitle||(isTotal?"Tham gia toàn bộ hệ thống PHOENIX":`Tham gia Box Messenger Nhánh ${i}`));
+    return `<a class="chat-card ${isTotal?'chat-total':''}" href="${esc(link)}"${target}>\n      <img src="${img}" alt="">\n      <div class="chat-copy"><b>${title}</b><span>${subtitle}</span></div>\n      <span class="chat-join">THAM GIA MESS ↗</span>\n    </a>`;
   }).join("");
 }
 function renderSupport(){const c=$("#supportCard");c.href=safeUrl(data.support.link);$("#supportImage").src=safeUrl(data.support.image,"logo-quant-doan.jpg");$("#supportLabel").textContent=data.support.label||"LIÊN HỆ FB"}
@@ -98,7 +114,11 @@ async function checkUser(){
 function buildEditors(){
   $("#qdanInput").value=data.name;$("#supportLinkInput").value=data.support.link==="#"?"":data.support.link;$("#supportLabelInput").value=data.support.label;$("#supportImageInput").value=data.support.image;
   $("#editList").innerHTML=data.branches.map((b,i)=>`<div class="branch-edit" data-id="${b.id}"><div class="branch-edit-head"><b>🌳 NHÁNH ${i+1}</b><button class="delete" onclick="delBranch('${b.id}')">XÓA</button></div><div class="grid"><label class="wide">Tên nhánh<input data-f="name" value="${esc(b.name)}"></label><label>👑 Chủ Quân Đoàn<input data-f="owner_name" value="${esc(b.owner_name)}"></label><label>⭐ Quyền Chủ QĐ<input data-f="deputy_name" value="${esc(b.deputy_name)}"></label><label>🛡️ Kỳ cựu 1<input data-f="veteran1" value="${esc(b.veteran1)}"></label><label>🛡️ Kỳ cựu 2<input data-f="veteran2" value="${esc(b.veteran2)}"></label><label>🛡️ Kỳ cựu 3<input data-f="veteran3" value="${esc(b.veteran3)}"></label></div></div>`).join("");
-  $("#chatEditList").innerHTML=data.chatBoxes.map((b,i)=>`<div class="chat-edit" data-id="${b.id}"><div class="branch-edit-head"><b>⚔️ BOX ${i+1}</b><button class="delete" onclick="delChat('${b.id}')">XÓA</button></div><div class="grid"><label>Tên Box<input data-f="title" value="${esc(b.title)}"></label><label>Nội dung phụ / ID<input data-f="subtitle" value="${esc(b.subtitle||"")}"></label><label class="wide">🔗 Link tham gia<input data-f="link_url" value="${esc(b.link_url||"")}" placeholder="https://.../"></label><label class="wide">🖼️ Link ảnh Box<input data-f="image_url" value="${esc(b.image_url||"")}" placeholder="https://.../anh.jpg"></label><label>Thứ tự<input data-f="sort_order" type="number" value="${Number(b.sort_order)||i+1}"></label></div></div>`).join("");
+  const chatBoxes=normalizeChatBoxes();
+  $("#chatEditList").innerHTML=chatBoxes.map((b,i)=>{
+    const label=i===0?'🌐 BOX TỔNG (5 NHÁNH)':`💬 BOX NHÁNH ${i}`;
+    return `<div class="chat-edit" data-id="${esc(b.id)}" data-chat-index="${i}"><div class="branch-edit-head"><b>${label}</b></div><div class="grid"><label>Tên Box<input data-f="title" value="${esc(b.title||'')}"></label><label>Nội dung phụ / ID<input data-f="subtitle" value="${esc(b.subtitle||'')}"></label><label class="wide">🔗 Link tham gia Messenger<input data-f="link_url" value="${esc(b.link_url||'')}" placeholder="https://m.me/... hoặc link nhóm"></label><label class="wide">🖼️ Link ảnh Box<input data-f="image_url" value="${esc(b.image_url||'')}" placeholder="https://.../anh.jpg"></label><label>Thứ tự<input data-f="sort_order" type="number" value="${i+1}" readonly></label></div></div>`;
+  }).join("");
 }
 async function login(){
   $("#loginMsg").textContent="";
@@ -110,12 +130,18 @@ async function saveAll(){
  const {data:{user}}=await db.auth.getUser();if(!user)return;
  await db.from("quan_doan_settings").upsert({id:1,name:$("#qdanInput").value.trim()||"PHOENIX",support_link:$("#supportLinkInput").value.trim()||"#",support_label:$("#supportLabelInput").value.trim()||"LIÊN HỆ FB",support_image:$("#supportImageInput").value.trim()||"logo-quant-doan.jpg"});
  const rows=[...$("#editList").children].map(el=>{const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());return {id:el.dataset.id,...o}});for(const r of rows){const{id,...changes}=r;await db.from("quan_doan_branches").update(changes).eq("id",id)}
- const chats=[...$("#chatEditList").children].map(el=>{const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());o.sort_order=Number(o.sort_order)||0;return {id:el.dataset.id,...o}});for(const r of chats){const{id,...changes}=r;const {error}=await db.from("quan_doan_chat_boxes").update(changes).eq("id",id);if(error)console.error(error)}
+ const chats=[...$("#chatEditList").children].map((el,i)=>{const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());o.sort_order=i+1;return {id:el.dataset.id,...o}});
+ for(const r of chats){
+   const {id,...changes}=r;
+   const isRealId=id && !String(id).startsWith("fallback-chat-");
+   const result=isRealId?await db.from("quan_doan_chat_boxes").update(changes).eq("id",id):await db.from("quan_doan_chat_boxes").insert(changes);
+   if(result.error)console.error(result.error);
+ }
  await load();buildEditors();alert("Đã lưu thành công.");
 }
 async function addBranch(){const {data:{user}}=await db.auth.getUser();if(!user)return;const next=data.branches.length+1;const {error}=await db.from("quan_doan_branches").insert({name:`NHÁNH ${next}`,sort_order:next,owner_name:"Chủ Nhánh",deputy_name:"Quyền Chủ",veteran1:"Kỳ Cựu 1",veteran2:"Kỳ Cựu 2",veteran3:"Kỳ Cựu 3"});if(error)alert(error.message);else{await load();buildEditors()}}
 async function delBranch(id){if(!confirm("Xóa nhánh này?"))return;const {error}=await db.from("quan_doan_branches").delete().eq("id",id);if(error)alert(error.message);else{await load();buildEditors()}}
-async function addChat(){const {data:{user}}=await db.auth.getUser();if(!user)return;const next=data.chatBoxes.length+1;const {error}=await db.from("quan_doan_chat_boxes").insert({title:`Box mới ${next}`,subtitle:"",image_url:"logo-quant-doan.jpg",link_url:"#",sort_order:next});if(error)alert(error.message);else{await load();buildEditors()}}
-async function delChat(id){if(!confirm("Xóa Box Chat này?"))return;const {error}=await db.from("quan_doan_chat_boxes").delete().eq("id",id);if(error)alert(error.message);else{await load();buildEditors()}}
+async function addChat(){alert("Hệ thống đã cố định 1 Box Tổng + 5 Box Nhánh. Hãy điền link cho từng Box rồi bấm LƯU TẤT CẢ.")}
+async function delChat(id){alert("Không xóa Box mặc định. Bạn có thể để trống link nếu chưa dùng.")}
 window.delBranch=delBranch;window.delChat=delChat;
 $("#adminBtn").onclick=openAdmin;$("#close").onclick=()=>$("#modal").classList.add("hidden");$("#login").onclick=login;$("#save").onclick=saveAll;$("#add").onclick=addBranch;$("#addChat").onclick=addChat;$("#logout").onclick=async()=>{await db.auth.signOut();checkUser()};$("#password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});load();

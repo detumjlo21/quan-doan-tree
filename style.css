@@ -275,3 +275,36 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
     transform-origin:center;
   }
 }
+
+/* ===== BOX CHAT 1 TỔNG + 5 NHÁNH ===== */
+.chat-section{max-width:980px;margin:52px auto 55px;padding:32px 22px 38px;border-top:1px solid #233b55;text-align:center}
+.chat-head small{display:block;color:#72a9d7;font-size:9px;font-weight:900;letter-spacing:2px;margin-bottom:5px}
+.chat-head h2{margin:0 0 8px;color:#eef6ff;font-size:21px;letter-spacing:.5px}
+.chat-head p{margin:0 0 24px;color:#7e96af;font-size:12px}
+.chat-list{display:grid;grid-template-columns:1fr 1fr;gap:13px;text-align:left}
+.chat-card{position:relative;min-height:68px;display:flex;align-items:center;gap:13px;padding:9px 13px;border:1px solid #2b638f;border-radius:14px;background:linear-gradient(135deg,#0b223a,#071626);color:#fff;text-decoration:none;box-sizing:border-box;overflow:hidden}
+.chat-card:hover{border-color:#ff3349;box-shadow:0 0 18px rgba(255,35,55,.14);transform:translateY(-1px)}
+.chat-card.chat-total{grid-column:1/-1;border-color:#ff3048;background:linear-gradient(135deg,#17080c,#0a1827);min-height:76px}
+.chat-card img{width:46px;height:46px;flex:0 0 46px;border-radius:10px;object-fit:cover;background:#080b0f}
+.chat-copy{min-width:0;padding-right:92px}
+.chat-card b{display:block;color:#f4f8ff;font-size:14px;font-weight:800;line-height:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-card span:not(.chat-join){display:block;color:#839bb5;font-size:10px;line-height:15px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-join{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:8px;font-weight:900;letter-spacing:.6px;color:#64c8ff;border:1px solid #28648f;border-radius:8px;padding:7px 6px;white-space:nowrap}
+.chat-total .chat-join{color:#fff;border-color:#a92737;background:rgba(255,35,55,.08)}
+.chat-empty{color:#8295b0;padding:20px}
+@media(max-width:800px){
+ .chat-section{margin:34px auto 48px;padding:28px 12px 34px}
+ .chat-list{grid-template-columns:1fr;gap:12px}
+ .chat-card.chat-total{grid-column:auto}
+}
+@media(max-width:520px){
+ .chat-section{margin:28px auto 42px;padding:25px 9px 30px}
+ .chat-head h2{font-size:18px}
+ .chat-head p{font-size:11px;margin-bottom:18px}
+ .chat-card{min-height:65px;padding:8px 10px}
+ .chat-card img{width:43px;height:43px;flex-basis:43px}
+ .chat-copy{padding-right:82px}
+ .chat-card b{font-size:13px}
+ .chat-card span:not(.chat-join){font-size:9px}
+ .chat-join{right:8px;font-size:7px;padding:6px 4px}
+}

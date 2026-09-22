@@ -26,6 +26,15 @@
   </section>
 </main>
 
+<section id="chat" class="chat-section" aria-label="Hệ thống Box Chat">
+  <div class="chat-head">
+    <small>💬 KẾT NỐI CỘNG ĐỒNG</small>
+    <h2>⚔️ HỆ THỐNG BOX CÁC NHÁNH</h2>
+    <p>Thành viên mới chọn Box phù hợp để tham gia Messenger.</p>
+  </div>
+  <div id="chatBranches" class="chat-list"></div>
+</section>
+
 <div class="admin-footer"><button id="adminBtn" class="admin-btn">▣ &nbsp;Đăng nhập Admin</button></div>
 
 <div id="modal" class="modal hidden">
@@ -40,8 +49,8 @@
       <div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label><label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label><label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label><label>Ảnh liên hệ (URL)<input id="supportImageInput" placeholder="https://.../avatar.jpg" type="url"></label></div>
       <div class="section"><b>DANH SÁCH NHÁNH</b><button class="add" id="add">＋ THÊM NHÁNH</button></div>
       <div id="editList"></div>
-      <div class="section chat-admin-title"><b>HỆ THỐNG BOX CHAT</b><button class="add" id="addChat">＋ THÊM BOX</button></div>
-      <p class="admin-note">Bạn có thể thêm bao nhiêu Box tùy ý. Mỗi Box có tên, nội dung phụ, link tham gia và ảnh riêng.</p>
+      <div class="section chat-admin-title"><b>HỆ THỐNG BOX CHAT</b><button class="add" id="addChat">⚙ 6 BOX CỐ ĐỊNH</button></div>
+      <p class="admin-note">Thiết lập 1 Box Tổng + 5 Box Nhánh. Mỗi Box có tên, nội dung phụ, link Messenger và ảnh riêng.</p>
       <div id="chatEditList"></div>
       <div class="actions"><button class="secondary" id="logout">Đăng xuất</button><button class="primary" id="save">💾 LƯU TẤT CẢ</button></div>
     </div>
