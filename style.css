@@ -311,3 +311,18 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
 /* Box Chat: chưa có link thì không điều hướng ngược về trang cây */
 .chat-card.chat-disabled{cursor:not-allowed;opacity:.78}
 .chat-card.chat-disabled .chat-join{color:#8fa0b2;border-color:#3a4654}
+
+/* Upload ảnh Box Chat trực tiếp trong Admin */
+.chat-image-file{padding:8px!important;cursor:pointer}.upload-hint{font-size:9px;color:#69e8bf}.upload-status{display:block;min-height:16px;margin-top:5px;font-size:10px;color:#8fa8c4}.chat-image-preview{display:block;width:72px;height:72px;object-fit:cover;border-radius:12px;border:1px solid #63303a;margin-top:8px;background:#080306}.chat-edit [data-f="image_url"]{opacity:.72;font-size:10px}
+
+/* ===== HỖ TRỢ • KHIẾU NẠI • BÁO CÁO ===== */
+.support-section{max-width:980px;margin:0 auto 24px;padding:0 22px;text-align:center}
+.support-card-wrap{padding:25px 18px 24px;border:1px solid #294b67;border-radius:18px;background:linear-gradient(135deg,#081a2c,#071321);box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.support-kicker{color:#70b9e8;font-size:9px;font-weight:900;letter-spacing:2px;margin-bottom:6px}
+.support-card-wrap h2{margin:0 0 7px;color:#eef6ff;font-size:18px;letter-spacing:.5px}
+.support-card-wrap p{margin:0 auto 17px;max-width:620px;color:#839bb5;font-size:11px;line-height:17px}
+.support-contact{display:inline-flex;align-items:center;gap:10px;min-width:210px;justify-content:center;padding:10px 15px;border:1px solid #315f82;border-radius:12px;background:#0b2238;color:#fff;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:.5px;box-sizing:border-box}
+.support-contact:hover{border-color:#ff3048;transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,35,55,.12)}
+.support-contact img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#080b0f;border:1px solid #315f82}
+.support-arrow{color:#65c9ff;font-size:15px}
+@media(max-width:520px){.support-section{padding:0 9px;margin-bottom:18px}.support-card-wrap{padding:22px 12px}.support-card-wrap h2{font-size:16px}.support-card-wrap p{font-size:10px}}

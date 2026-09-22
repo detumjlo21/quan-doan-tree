@@ -41,6 +41,7 @@ async function load(){
   // Luôn dựng cây mặc định trước để website không bao giờ trắng nếu Supabase/CDN gặp lỗi.
   if(!Array.isArray(data.branches)||!data.branches.length) data.branches=fallbackBranches();
   render();
+  renderSupport();
   if(!db){
     data.chatBoxes=defaultBoxes();
     renderChat();
@@ -63,6 +64,7 @@ async function load(){
       data.branches=(b&&b.length)?b:fallbackBranches();
     }
     render();
+    renderSupport();
 
     // Box Chat: luôn hiển thị 1 Box Tổng + 1 Box cho từng nhánh.
     const {data:c,error:ce}=await db.from("quan_doan_chat_boxes").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});
@@ -143,8 +145,40 @@ function buildEditors(){
   const chatBoxes=normalizeChatBoxes();
   $("#chatEditList").innerHTML=chatBoxes.map((b,i)=>{
     const label=i===0?'🌐 BOX TỔNG (5 NHÁNH)':`💬 BOX NHÁNH ${i}`;
-    return `<div class="chat-edit" data-id="${esc(b.id)}" data-chat-index="${i}"><div class="branch-edit-head"><b>${label}</b></div><div class="grid"><label>Tên Box<input data-f="title" value="${esc(b.title||'')}"></label><label>Nội dung phụ / ID<input data-f="subtitle" value="${esc(b.subtitle||'')}"></label><label class="wide">🔗 Link tham gia Messenger<input data-f="link_url" value="${esc(b.link_url||'')}" placeholder="https://m.me/... hoặc link nhóm"></label><label class="wide">🖼️ Link ảnh Box<input data-f="image_url" value="${esc(b.image_url||'')}" placeholder="https://.../anh.jpg"></label><label>Thứ tự<input data-f="sort_order" type="number" value="${i+1}" readonly></label></div></div>`;
+    const preview=safeUrl(b.image_url||"logo-quant-doan.jpg","logo-quant-doan.jpg");
+    return `<div class="chat-edit" data-id="${esc(b.id)}" data-chat-index="${i}"><div class="branch-edit-head"><b>${label}</b></div><div class="grid"><label>Tên Box<input data-f="title" value="${esc(b.title||'')}"></label><label>Nội dung phụ / ID<input data-f="subtitle" value="${esc(b.subtitle||'')}"></label><label class="wide">🔗 Link tham gia Messenger<input data-f="link_url" value="${esc(b.link_url||'')}" placeholder="https://m.me/... hoặc link nhóm"></label><label class="wide">🖼️ Ảnh Box <span class="upload-hint">(chọn ảnh trực tiếp)</span><input class="chat-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><span class="upload-status" aria-live="polite"></span><img class="chat-image-preview" src="${esc(preview)}" alt="Xem trước ảnh Box"><input data-f="image_url" value="${esc(b.image_url||'')}" placeholder="URL ảnh sau khi tải lên" readonly></label><label>Thứ tự<input data-f="sort_order" type="number" value="${i+1}" readonly></label></div></div>`;
   }).join("");
+  document.querySelectorAll('.chat-image-file').forEach(input=>{
+    input.addEventListener('change',()=>uploadChatImage(input));
+  });
+}
+async function uploadChatImage(input){
+  const file=input.files?.[0];
+  if(!file)return;
+  if(!db){alert('Supabase chưa kết nối.');input.value='';return;}
+  const card=input.closest('.chat-edit');
+  const urlInput=card?.querySelector('[data-f="image_url"]');
+  const preview=card?.querySelector('.chat-image-preview');
+  const status=card?.querySelector('.upload-status');
+  if(file.size>5*1024*1024){alert('Ảnh tối đa 5MB.');input.value='';return;}
+  if(!/^image\/(png|jpeg|webp|gif)$/i.test(file.type)){alert('Chỉ nhận PNG, JPG, WEBP hoặc GIF.');input.value='';return;}
+  if(status)status.textContent='⏳ Đang tải ảnh lên...';
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+  const path=`chat-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  try{
+    const {error}=await db.storage.from('chat-box-images').upload(path,file,{contentType:file.type,upsert:false,cacheControl:'3600'});
+    if(error)throw error;
+    const {data:pub}=db.storage.from('chat-box-images').getPublicUrl(path);
+    const url=pub?.publicUrl||'';
+    if(!url)throw new Error('Không lấy được URL ảnh công khai.');
+    if(urlInput)urlInput.value=url;
+    if(preview)preview.src=url;
+    if(status)status.textContent='✅ Đã tải ảnh. Bấm LƯU TẤT CẢ để lưu Box.';
+  }catch(err){
+    console.error(err);
+    if(status)status.textContent='❌ Tải ảnh thất bại';
+    alert('Không tải được ảnh Box: '+(err.message||err)+"\n\nHãy chạy phần SQL tạo Storage trong file supabase.sql rồi thử lại.");
+  }
 }
 async function login(){
   $("#loginMsg").textContent="";

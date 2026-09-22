@@ -67,3 +67,30 @@ drop policy if exists "authenticated write branches" on public.quan_doan_branche
 create policy "authenticated write branches" on public.quan_doan_branches for all to authenticated using (true) with check (true);
 drop policy if exists "authenticated write chat boxes" on public.quan_doan_chat_boxes;
 create policy "authenticated write chat boxes" on public.quan_doan_chat_boxes for all to authenticated using (true) with check (true);
+
+
+-- STORAGE ẢNH BOX CHAT: cho phép Admin tải ảnh trực tiếp trên trang quản trị.
+insert into storage.buckets (id, name, public)
+values ('chat-box-images', 'chat-box-images', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "public read chat box images" on storage.objects;
+create policy "public read chat box images"
+on storage.objects for select
+using (bucket_id = 'chat-box-images');
+
+drop policy if exists "authenticated upload chat box images" on storage.objects;
+create policy "authenticated upload chat box images"
+on storage.objects for insert to authenticated
+with check (bucket_id = 'chat-box-images');
+
+drop policy if exists "authenticated update chat box images" on storage.objects;
+create policy "authenticated update chat box images"
+on storage.objects for update to authenticated
+using (bucket_id = 'chat-box-images')
+with check (bucket_id = 'chat-box-images');
+
+drop policy if exists "authenticated delete chat box images" on storage.objects;
+create policy "authenticated delete chat box images"
+on storage.objects for delete to authenticated
+using (bucket_id = 'chat-box-images');
