@@ -12,41 +12,17 @@
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <div class="brand-mark"><img src="logo-quant-doan.jpg" alt="PHOENIX"></div>
-    <div class="brand-copy"><b>PHOENIX 禄</b><span>CỔNG THÔNG TIN QUÂN ĐOÀN</span></div>
-  </div>
-  <div class="top-actions">
-    <span class="status-dot"><i></i> ONLINE</span>
-    <button id="adminBtn" class="admin-btn">🔒 &nbsp;ĐĂNG NHẬP ADMIN</button>
-  </div>
-</header>
-
 <main>
-  <section class="hero" aria-label="PHOENIX">
-    <div class="hero-glow glow-a"></div>
-    <div class="hero-glow glow-b"></div>
-    <div class="hero-lines" aria-hidden="true"></div>
-    <div class="hero-content">
-      <div class="hero-kicker">CỔNG THÔNG TIN QUÂN ĐOÀN</div>
-      <div class="hero-logo-frame">
-        <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
-        <img src="logo-quant-doan.jpg" alt="Logo PHOENIX">
-      </div>
-      <h1>PHOENIX <span>禄</span></h1>
-      <p class="hero-sub">ĐOÀN KẾT <em>•</em> KỶ CƯƠNG <em>•</em> PHÁT TRIỂN</p>
-      <div class="hero-stats">
-        <span>◈ <b>ĐOÀN KẾT</b></span>
-        <span>⚔ <b>KỶ CƯƠNG</b></span>
-        <span>▰ <b>PHÁT TRIỂN</b></span>
-      </div>
-    </div>
+  <!-- BANNER: ảnh này có thể thay trực tiếp trong Admin -->
+  <section class="hero" aria-label="Banner PHOENIX">
+    <img id="heroBanner" src="banner-phoenix.png" alt="PHOENIX - Cổng thông tin Quân Đoàn">
+    <div class="hero-overlay"></div>
+    <div class="hero-corners" aria-hidden="true"></div>
   </section>
 
   <section id="chat" class="chat-section" aria-label="Hệ thống Box Chat">
     <div class="section-heading">
-      <div class="heading-icon">✈</div>
+      <div class="heading-icon">➤</div>
       <div>
         <small>KẾT NỐI • GIAO LƯU • CÙNG PHÁT TRIỂN</small>
         <h2>BOX CHAT</h2>
@@ -76,8 +52,8 @@
 </main>
 
 <footer class="site-footer">
-  <div><b>PHOENIX 禄</b><span>•</span><span>ĐOÀN KẾT</span><i>|</i><span>KỶ CƯƠNG</span><i>|</i><span>PHÁT TRIỂN</span></div>
-  <button class="footer-admin" onclick="openAdmin()">🔒 Đăng nhập admin</button>
+  <div><span>ĐOÀN KẾT</span><i>|</i><span>KỶ CƯƠNG</span><i>|</i><span>PHÁT TRIỂN</span></div>
+  <button class="footer-admin" id="footerAdmin">🔒 Đăng nhập admin</button>
 </footer>
 
 <div id="modal" class="modal hidden">
@@ -88,7 +64,7 @@
     </div>
 
     <div id="loginBox">
-      <p>Đăng nhập tài khoản Admin Supabase để chỉnh sửa Box Chat và thông tin liên hệ.</p>
+      <p>Đăng nhập tài khoản Admin Supabase để chỉnh sửa 6 Box Chat, banner và thông tin liên hệ.</p>
       <input id="email" type="email" placeholder="Email Admin">
       <input id="password" type="password" placeholder="Mật khẩu">
       <button class="primary" id="login">ĐĂNG NHẬP</button>
@@ -97,20 +73,36 @@
 
     <div id="adminBox" class="hidden">
       <div class="settings">
-        <label>Tên Quân Đoàn<input id="qdanInput"></label>
-        <label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label>
-        <label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label>
-        <label class="wide support-image-admin">
+        <label> Tên Quân Đoàn
+          <input id="qdanInput" value="PHOENIX">
+        </label>
+        <label>Link liên hệ FB
+          <input id="supportLinkInput" placeholder="https://facebook.com/..." type="url">
+        </label>
+        <label>Tên nút liên hệ
+          <input id="supportLabelInput" value="LIÊN HỆ FB">
+        </label>
+        <label class="support-image-admin">
           🖼️ Ảnh liên hệ Facebook <span class="upload-hint">(chọn ảnh trực tiếp)</span>
           <input id="supportImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
           <span id="supportUploadStatus" class="upload-status" aria-live="polite"></span>
           <img id="supportImagePreview" class="support-image-preview" src="logo-quant-doan.jpg" alt="Xem trước ảnh liên hệ">
           <input id="supportImageInput" placeholder="URL ảnh sau khi tải lên" type="url">
         </label>
+        <label class="banner-admin wide">
+          🖼️ Ảnh Banner trang chủ <span class="upload-hint">(chọn ảnh trực tiếp)</span>
+          <input id="bannerImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+          <span id="bannerUploadStatus" class="upload-status" aria-live="polite"></span>
+          <img id="bannerImagePreview" class="banner-image-preview" src="banner-phoenix.png" alt="Xem trước banner">
+          <input id="bannerImageInput" placeholder="URL banner sau khi tải lên" type="url">
+        </label>
       </div>
 
-      <div class="section chat-admin-title"><b>HỆ THỐNG BOX CHAT</b><button class="add" id="addChat">⚙ 6 BOX CỐ ĐỊNH</button></div>
-      <p class="admin-note">1 Box Tổng + 5 Box Nhánh. Mỗi Box có tên, nội dung phụ, link Messenger và ảnh riêng.</p>
+      <div class="section chat-admin-title">
+        <b>HỆ THỐNG BOX CHAT — 6 BOX CỐ ĐỊNH</b>
+        <span class="fixed-badge">1 TỔNG + 5 NHÁNH</span>
+      </div>
+      <p class="admin-note">Không thêm hoặc xóa Box. Chỉ chỉnh sửa đúng 6 Box hiện có: tên, nội dung phụ, link Messenger và ảnh.</p>
       <div id="chatEditList"></div>
 
       <div class="actions">
