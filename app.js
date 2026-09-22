@@ -65,8 +65,17 @@ async function load(){
     render();
 
     // Box Chat: luôn hiển thị 1 Box Tổng + 1 Box cho từng nhánh.
-    const {data:c,error:ce}=await db.from("quan_doan_chat_boxes").select("*").order("sort_order",{ascending:true});
-    if(ce) data.chatBoxes=defaultBoxes(); else data.chatBoxes=normalizeChatBoxes();
+    const {data:c,error:ce}=await db.from("quan_doan_chat_boxes").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+    if(ce){
+      data.chatBoxes=defaultBoxes();
+      console.warn("Không đọc được Box Chat:",ce.message);
+    }else{
+      // Nếu các bản cũ từng tạo trùng Box, giữ bản ghi mới nhất của từng vị trí.
+      const latestByOrder=new Map();
+      (c||[]).forEach(row=>{ const k=Number(row.sort_order)||0; if(!latestByOrder.has(k)) latestByOrder.set(k,row); });
+      data.chatBoxes=[...latestByOrder.entries()].sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+      data.chatBoxes=normalizeChatBoxes();
+    }
     renderChat();
     if(document.querySelector("#chatEditList")) buildEditors();
   }catch(err){
@@ -167,7 +176,7 @@ async function saveAll(){
     if(result.error){alert("Lỗi lưu nhánh: "+result.error.message);return;}
   }
 
-  // Lưu đúng 6 Box: nếu đã có UUID thì update, nếu là Box mẫu/fallback thì insert.
+  // Lưu 6 Box. Bản ghi thật trong Supabase được update theo UUID; Box fallback chỉ insert một lần.
   const chatRows=[...$("#chatEditList").children].map((el,i)=>{
     const o={};
     el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());
@@ -176,10 +185,10 @@ async function saveAll(){
   });
   for(const r of chatRows){
     const {id,...changes}=r;
-    // Chuẩn hóa link trước khi lưu để m.me/... hoặc facebook.com/... vẫn thành URL thật.
     if(changes.link_url && !/^https?:\/\//i.test(changes.link_url) && !changes.link_url.startsWith("/")){
       changes.link_url="https://"+changes.link_url;
     }
+    if(!changes.link_url) changes.link_url="#";
     let result;
     const isRealId=id && !String(id).startsWith("fallback-chat-");
     if(isRealId){
@@ -188,7 +197,7 @@ async function saveAll(){
       result=await db.from("quan_doan_chat_boxes").insert(changes);
     }
     if(result.error){
-      alert(`Lỗi lưu ${r.title||'Box Chat'}: ${result.error.message}`);
+      alert(`Lỗi lưu ${r.title||'Box Chat'}: ${result.error.message}\n\nHãy chạy lại file supabase.sql trong Supabase SQL Editor rồi đăng nhập lại.`);
       return;
     }
   }

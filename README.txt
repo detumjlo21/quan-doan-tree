@@ -1,4 +1,4 @@
-# PHOENIX - Cây Chức Vụ + Supabase
+# PHOENIX - Cây Chức Vụ + Supabase (FIX8)
 
 1. Mở Supabase > SQL Editor.
 2. Dán toàn bộ `supabase.sql` và Run.
