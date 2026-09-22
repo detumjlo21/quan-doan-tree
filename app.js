@@ -94,7 +94,7 @@ function renderChat(){
     const subtitle=esc(b.subtitle||(i===0?"Tham gia cộng đồng PHOENIX":`NHÁNH ${i}`));
     const content=`<img class="chat-logo" src="${img}" alt="">
       <div class="chat-copy"><b>${title}</b><span>${subtitle}</span></div>
-      <span class="chat-join">${link?"THAM GIA ↗":"CHƯA CÓ LINK"}</span>`;
+      <span class="chat-join">${link?"THAM GIA":"CHƯA CÓ LINK"}</span>`;
     return link
       ? `<a class="chat-card" href="${esc(link)}" target="_blank" rel="noopener noreferrer">${content}</a>`
       : `<div class="chat-card chat-disabled" title="Admin chưa nhập link Messenger">${content}</div>`;
