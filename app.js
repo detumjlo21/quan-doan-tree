@@ -87,6 +87,7 @@ async function load(){
   }
 }
 function render(){
+  if(!$("#branches")) return;
   $("#branches").innerHTML=data.branches.length?data.branches.map((b,i)=>`<article class="branch"><div class="branch-title"><span class="tree-icon">♟</span> ${esc(b.name||`NHÁNH ${i+1}`)}</div><div class="branch-card">${role("♛","CHỦ QUÂN ĐOÀN",b.owner_name,"owner-role")}${role("★","QUYỀN CHỦ QĐ",b.deputy_name,"deputy-role")}<div class="veterans">${role("🎖️","KỲ CỰU 1",b.veteran1)}${role("🎖️","KỲ CỰU 2",b.veteran2)}${role("🎖️","KỲ CỰU 3",b.veteran3)}</div></div></article>`).join(""):"<p>Chưa có nhánh.</p>";
 }
 function role(i,l,n,cls=""){return `<div class="role ${cls}"><div class="ico">${i}</div><small>${l}</small><b>${esc(n||"Chưa cập nhật")}</b></div>`}
@@ -141,7 +142,6 @@ async function checkUser(){
 }
 function buildEditors(){
   $("#qdanInput").value=data.name;$("#supportLinkInput").value=data.support.link==="#"?"":data.support.link;$("#supportLabelInput").value=data.support.label;$("#supportImageInput").value=data.support.image;
-  $("#editList").innerHTML=data.branches.map((b,i)=>`<div class="branch-edit" data-id="${b.id}"><div class="branch-edit-head"><b>🌳 NHÁNH ${i+1}</b><button class="delete" onclick="delBranch('${b.id}')">XÓA</button></div><div class="grid"><label class="wide">Tên nhánh<input data-f="name" value="${esc(b.name)}"></label><label>👑 Chủ Quân Đoàn<input data-f="owner_name" value="${esc(b.owner_name)}"></label><label>⭐ Quyền Chủ QĐ<input data-f="deputy_name" value="${esc(b.deputy_name)}"></label><label>🛡️ Kỳ cựu 1<input data-f="veteran1" value="${esc(b.veteran1)}"></label><label>🛡️ Kỳ cựu 2<input data-f="veteran2" value="${esc(b.veteran2)}"></label><label>🛡️ Kỳ cựu 3<input data-f="veteran3" value="${esc(b.veteran3)}"></label></div></div>`).join("");
   const chatBoxes=normalizeChatBoxes();
   $("#chatEditList").innerHTML=chatBoxes.map((b,i)=>{
     const label=i===0?'🌐 BOX TỔNG (5 NHÁNH)':`💬 BOX NHÁNH ${i}`;
@@ -229,16 +229,6 @@ async function saveAll(){
   });
   if(settingsResult.error){alert("Lỗi lưu thông tin: "+settingsResult.error.message);return;}
 
-  const rows=[...$("#editList").children].map(el=>{
-    const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());
-    return {id:el.dataset.id,...o};
-  });
-  for(const r of rows){
-    const {id,...changes}=r;
-    const result=await db.from("quan_doan_branches").update(changes).eq("id",id);
-    if(result.error){alert("Lỗi lưu nhánh: "+result.error.message);return;}
-  }
-
   // Lưu 6 Box. Bản ghi thật trong Supabase được update theo UUID; Box fallback chỉ insert một lần.
   const chatRows=[...$("#chatEditList").children].map((el,i)=>{
     const o={};
@@ -274,4 +264,11 @@ async function delBranch(id){if(!confirm("Xóa nhánh này?"))return;const {erro
 async function addChat(){alert("Hệ thống đã cố định 1 Box Tổng + 5 Box Nhánh. Hãy điền link cho từng Box rồi bấm LƯU TẤT CẢ.")}
 async function delChat(id){alert("Không xóa Box mặc định. Bạn có thể để trống link nếu chưa dùng.")}
 window.delBranch=delBranch;window.delChat=delChat;
-$("#adminBtn").onclick=openAdmin;$("#close").onclick=()=>$("#modal").classList.add("hidden");$("#login").onclick=login;$("#save").onclick=saveAll;$("#add").onclick=addBranch;$("#addChat").onclick=addChat;$("#logout").onclick=async()=>{await db.auth.signOut();checkUser()};$("#password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});load();
+$("#adminBtn").onclick=openAdmin;
+$("#close").onclick=()=>$("#modal").classList.add("hidden");
+$("#login").onclick=login;
+$("#save").onclick=saveAll;
+$("#addChat").onclick=addChat;
+$("#logout").onclick=async()=>{await db.auth.signOut();checkUser()};
+$("#password").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+load();

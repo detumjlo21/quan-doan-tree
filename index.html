@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Thông Tin Phoenix 禄 </title>
+<title>PHOENIX 禄 • Cổng thông tin Quân Đoàn</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,64 +11,116 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
 <header class="topbar">
   <div class="brand">
-    <img src="logo-quant-doan.jpg" alt="Logo PHOENIX">
-    <div class="brand-copy"><b>PHOENIX</b><span>THÔNG TIN QUÂN ĐOÀN</span></div>
+    <div class="brand-mark"><img src="logo-quant-doan.jpg" alt="PHOENIX"></div>
+    <div class="brand-copy"><b>PHOENIX 禄</b><span>CỔNG THÔNG TIN QUÂN ĐOÀN</span></div>
+  </div>
+  <div class="top-actions">
+    <span class="status-dot"><i></i> ONLINE</span>
+    <button id="adminBtn" class="admin-btn">🔒 &nbsp;ĐĂNG NHẬP ADMIN</button>
   </div>
 </header>
 
-<main id="org">
-  <section class="org-tree" aria-label="Sơ đồ tổ chức">
-    <div class="root-wrap"><div class="root-card"><img class="root-logo" src="logo-quant-doan.jpg" alt="PHOENIX"></div></div>
-    <div class="tree-line" aria-hidden="true"></div>
-    <div id="branches" class="branches"></div>
+<main>
+  <section class="hero" aria-label="PHOENIX">
+    <div class="hero-glow glow-a"></div>
+    <div class="hero-glow glow-b"></div>
+    <div class="hero-lines" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-kicker">CỔNG THÔNG TIN QUÂN ĐOÀN</div>
+      <div class="hero-logo-frame">
+        <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+        <img src="logo-quant-doan.jpg" alt="Logo PHOENIX">
+      </div>
+      <h1>PHOENIX <span>禄</span></h1>
+      <p class="hero-sub">ĐOÀN KẾT <em>•</em> KỶ CƯƠNG <em>•</em> PHÁT TRIỂN</p>
+      <div class="hero-stats">
+        <span>◈ <b>ĐOÀN KẾT</b></span>
+        <span>⚔ <b>KỶ CƯƠNG</b></span>
+        <span>▰ <b>PHÁT TRIỂN</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="chat" class="chat-section" aria-label="Hệ thống Box Chat">
+    <div class="section-heading">
+      <div class="heading-icon">✈</div>
+      <div>
+        <small>KẾT NỐI • GIAO LƯU • CÙNG PHÁT TRIỂN</small>
+        <h2>BOX CHAT</h2>
+        <p>Chọn Box phù hợp để tham gia cộng đồng PHOENIX.</p>
+      </div>
+      <div class="heading-line"></div>
+    </div>
+    <div id="chatBranches" class="chat-list"></div>
+  </section>
+
+  <section class="support-section" aria-label="Hỗ trợ khiếu nại và báo cáo">
+    <div class="support-card-wrap">
+      <div class="support-icon">◉</div>
+      <div class="support-copy">
+        <small>HỖ TRỢ THÀNH VIÊN</small>
+        <h2>HỖ TRỢ • KHIẾU NẠI • BÁO CÁO</h2>
+        <p>Nếu bạn gặp vấn đề, có khiếu nại hoặc cần báo cáo, vui lòng liên hệ BQT qua Facebook bên dưới.</p>
+      </div>
+      <div class="support-divider"></div>
+      <a id="supportCard" class="support-contact" href="#" target="_blank" rel="noopener noreferrer">
+        <img id="supportImage" src="logo-quant-doan.jpg" alt="Liên hệ BQT">
+        <span class="support-contact-copy"><b>LIÊN HỆ BQT</b><small id="supportLabel">LIÊN HỆ FB</small></span>
+        <span class="support-arrow">↗</span>
+      </a>
+    </div>
   </section>
 </main>
 
-<section id="chat" class="chat-section" aria-label="Hệ thống Box Chat">
-  <div class="chat-head">
-    <small>💬 KẾT NỐI CỘNG ĐỒNG</small>
-    <h2>⚔️ HỆ THỐNG BOX CÁC NHÁNH</h2>
-    <p>Thành viên mới chọn Box phù hợp để tham gia Messenger.</p>
-  </div>
-  <div id="chatBranches" class="chat-list"></div>
-</section>
-
-<section class="support-section" aria-label="Hỗ trợ khiếu nại và báo cáo">
-  <div class="support-card-wrap">
-    <div class="support-kicker">🛡️ HỖ TRỢ THÀNH VIÊN</div>
-    <h2>HỖ TRỢ • KHIẾU NẠI • BÁO CÁO</h2>
-    <p>Nếu cần hỗ trợ, khiếu nại hoặc báo cáo vấn đề, hãy liên hệ trực tiếp với BQT.</p>
-    <a id="supportCard" class="support-contact" href="#" target="_blank" rel="noopener noreferrer">
-      <img id="supportImage" src="logo-quant-doan.jpg" alt="Liên hệ hỗ trợ">
-      <span id="supportLabel">LIÊN HỆ FB</span>
-      <span class="support-arrow">↗</span>
-    </a>
-  </div>
-</section>
-
-<div class="admin-footer"><button id="adminBtn" class="admin-btn">▣ &nbsp;Đăng nhập Admin</button></div>
+<footer class="site-footer">
+  <div><b>PHOENIX 禄</b><span>•</span><span>ĐOÀN KẾT</span><i>|</i><span>KỶ CƯƠNG</span><i>|</i><span>PHÁT TRIỂN</span></div>
+  <button class="footer-admin" onclick="openAdmin()">🔒 Đăng nhập admin</button>
+</footer>
 
 <div id="modal" class="modal hidden">
   <div class="panel">
-    <div class="panelhead"><div><small>ADMIN</small><h2>Quản lý PHOENIX</h2></div><button id="close">✕</button></div>
-    <div id="loginBox">
-      <p>Đăng nhập tài khoản Admin Supabase.</p>
-      <input id="email" type="email" placeholder="Email Admin"><input id="password" type="password" placeholder="Mật khẩu">
-      <button class="primary" id="login">ĐĂNG NHẬP</button><div id="loginMsg" class="msg"></div>
+    <div class="panelhead">
+      <div><small>PHOENIX ADMIN</small><h2>Quản lý hệ thống</h2></div>
+      <button id="close">✕</button>
     </div>
+
+    <div id="loginBox">
+      <p>Đăng nhập tài khoản Admin Supabase để chỉnh sửa Box Chat và thông tin liên hệ.</p>
+      <input id="email" type="email" placeholder="Email Admin">
+      <input id="password" type="password" placeholder="Mật khẩu">
+      <button class="primary" id="login">ĐĂNG NHẬP</button>
+      <div id="loginMsg" class="msg"></div>
+    </div>
+
     <div id="adminBox" class="hidden">
-      <div class="settings"><label>Tên Quân Đoàn<input id="qdanInput"></label><label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label><label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label><label class="wide support-image-admin">🖼️ Ảnh liên hệ Facebook <span class="upload-hint">(chọn ảnh trực tiếp)</span><input id="supportImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif"><span id="supportUploadStatus" class="upload-status" aria-live="polite"></span><img id="supportImagePreview" class="support-image-preview" src="logo-quant-doan.jpg" alt="Xem trước ảnh liên hệ"><input id="supportImageInput" placeholder="URL ảnh sau khi tải lên" type="url"></label></div>
-      <div class="section"><b>DANH SÁCH NHÁNH</b><button class="add" id="add">＋ THÊM NHÁNH</button></div>
-      <div id="editList"></div>
+      <div class="settings">
+        <label>Tên Quân Đoàn<input id="qdanInput"></label>
+        <label>Link liên hệ FB<input id="supportLinkInput" placeholder="https://facebook.com/..." type="url"></label>
+        <label>Tên nút liên hệ<input id="supportLabelInput" value="LIÊN HỆ FB"></label>
+        <label class="wide support-image-admin">
+          🖼️ Ảnh liên hệ Facebook <span class="upload-hint">(chọn ảnh trực tiếp)</span>
+          <input id="supportImageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+          <span id="supportUploadStatus" class="upload-status" aria-live="polite"></span>
+          <img id="supportImagePreview" class="support-image-preview" src="logo-quant-doan.jpg" alt="Xem trước ảnh liên hệ">
+          <input id="supportImageInput" placeholder="URL ảnh sau khi tải lên" type="url">
+        </label>
+      </div>
+
       <div class="section chat-admin-title"><b>HỆ THỐNG BOX CHAT</b><button class="add" id="addChat">⚙ 6 BOX CỐ ĐỊNH</button></div>
-      <p class="admin-note">Thiết lập 1 Box Tổng + 5 Box Nhánh. Mỗi Box có tên, nội dung phụ, link Messenger và ảnh riêng.</p>
+      <p class="admin-note">1 Box Tổng + 5 Box Nhánh. Mỗi Box có tên, nội dung phụ, link Messenger và ảnh riêng.</p>
       <div id="chatEditList"></div>
-      <div class="actions"><button class="secondary" id="logout">Đăng xuất</button><button class="primary" id="save">💾 LƯU TẤT CẢ</button></div>
+
+      <div class="actions">
+        <button class="secondary" id="logout">Đăng xuất</button>
+        <button class="primary" id="save">💾 LƯU TẤT CẢ</button>
+      </div>
     </div>
   </div>
 </div>
+
 <script src="app.js"></script>
 </body>
 </html>

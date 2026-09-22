@@ -1,13 +1,12 @@
-# PHOENIX - Cây Chức Vụ + Supabase (FIX8)
+PHOENIX WEB REDESIGN – RED/BLACK
 
-1. Mở Supabase > SQL Editor.
-2. Dán toàn bộ `supabase.sql` và Run.
-3. Vào Authentication > Users > Add user, tạo email + mật khẩu Admin.
-4. Upload `index.html`, `style.css`, `app.js` lên GitHub Pages.
-5. Mở web > ADMIN > đăng nhập tài khoản vừa tạo.
+Bản này bỏ hoàn toàn cây chức vụ ở giao diện công khai và thiết kế lại theo phong cách PHOENIX đỏ/đen:
+- Hero PHOENIX
+- Hệ thống Box Chat: 1 Box Tổng + 5 Box Nhánh
+- Ảnh, tên, nội dung phụ và link Messenger chỉnh trực tiếp trong Admin
+- Hỗ trợ/Khiếu nại/Báo cáo + link Facebook + ảnh liên hệ chỉnh trong Admin
+- Footer + đăng nhập Admin
+- Responsive PC/mobile
 
-Quan trọng:
-- `sb_publishable_...` có thể dùng ở frontend.
-- KHÔNG đưa `service_role`/secret key lên GitHub.
-- Bản này cho phép mọi người đọc cây, nhưng chỉ user đăng nhập mới ghi dữ liệu.
-- Nếu muốn chỉ MỘT email cụ thể được phép sửa, cần thêm bảng `admins` + policy kiểm tra user id/email. Bản hiện tại coi mọi tài khoản Supabase Auth đăng nhập là Admin.
+Dữ liệu vẫn dùng Supabase hiện tại. Không cần tạo bảng mới nếu bạn đã chạy supabase.sql của FIX11.
+Bucket ảnh: chat-box-images.
