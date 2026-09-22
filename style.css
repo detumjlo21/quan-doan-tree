@@ -14,6 +14,41 @@ button,input{font:inherit}button{cursor:pointer}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.12) 70%,rgba(0,0,0,.65));pointer-events:none}
 .hero-corners{position:absolute;inset:14px;border:1px solid rgba(255,25,42,.48);clip-path:polygon(0 0,28px 0,28px 2px,0 2px,0 28px,2px 28px,2px 0,100% 0,100% 28px,calc(100% - 2px) 28px,calc(100% - 2px) 0,calc(100% - 28px) 0,calc(100% - 28px) 2px,100% 2px,100% 100%,calc(100% - 28px) 100%,calc(100% - 28px) calc(100% - 2px),100% calc(100% - 2px),100% calc(100% - 28px),calc(100% - 2px) calc(100% - 28px),calc(100% - 2px) 100%,2px 100%,2px calc(100% - 28px),0 calc(100% - 28px),0 100%,28px 100%,28px calc(100% - 2px),0 calc(100% - 2px))}
 
+/* PHOENIX IDENTITY / LOGO */
+.brand-strip{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:22px 18px 6px;
+}
+.brand-logo{
+  display:block;
+  width:88px;
+  height:88px;
+  object-fit:cover;
+  border-radius:10px;
+  border:1px solid rgba(255,28,45,.18);
+  box-shadow:0 10px 28px rgba(255,0,25,.12);
+  background:#050505;
+}
+.brand-title{
+  margin-top:12px;
+  font-size:30px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.4px;
+  color:#f5f5f5;
+}
+.brand-subtitle{
+  margin-top:8px;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:1.6px;
+  color:#a2a2a8;
+}
+
 /* BOX CHAT */
 .chat-section{max-width:980px;margin:0 auto;padding:64px 22px 70px}
 .section-heading{display:flex;align-items:center;gap:16px;margin-bottom:28px}
@@ -47,6 +82,11 @@ input{width:100%;margin-top:7px;border:1px solid #303036;border-radius:8px;backg
 .section{display:flex;justify-content:space-between;align-items:center;margin:24px 0 10px;color:#eee;font-size:11px}.fixed-badge{font-size:8px;color:#ff5a67;border:1px solid #54232a;padding:6px 8px;border-radius:99px}.chat-edit{border:1px solid #29292e;border-radius:12px;padding:14px;margin:10px 0;background:#09090b}.branch-edit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:10px;color:#ddd}.branch-edit-head span{font-size:8px;color:#777}.admin-note{font-size:10px!important;color:#707077!important}.chat-image-preview{display:block;width:90px;height:65px;object-fit:cover;border-radius:8px;border:1px solid #38383d;margin-top:9px}.support-image-preview{display:block;width:76px;height:76px;object-fit:cover;border-radius:50%;border:1px solid #38383d;margin-top:9px}.banner-image-preview{display:block;width:100%;max-width:520px;height:130px;object-fit:cover;object-position:center;border-radius:9px;border:1px solid #38383d;margin-top:9px}.upload-hint{color:#ff4354;font-weight:500}.upload-status{display:block;margin-top:6px;font-size:9px;color:#9d9da4}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid #28282c}.chat-admin-title{margin-top:28px}
 
 @media(max-width:700px){
+  .brand-strip{padding:17px 12px 2px}
+  .brand-logo{width:72px;height:72px;border-radius:9px}
+  .brand-title{font-size:23px;margin-top:10px}
+  .brand-subtitle{font-size:7px;margin-top:6px;letter-spacing:1.2px}
+
   .hero img{min-height:205px;max-height:250px;object-fit:cover}.hero-corners{inset:7px}
   .chat-section{padding:43px 10px 45px}.section-heading{gap:11px;margin-bottom:19px}.heading-icon{width:42px;height:42px;flex-basis:42px;font-size:18px}.section-heading h2{font-size:22px}.section-heading small{font-size:7px;letter-spacing:1.3px}.section-heading p{font-size:8px}.heading-line{display:none}
   .chat-list{gap:9px}.chat-card{grid-template-columns:49px minmax(0,1fr) 67px;gap:10px;min-height:76px;padding:8px 9px;border-radius:10px}.chat-logo{width:45px;height:45px;border-radius:7px}.chat-copy b{font-size:9px}.chat-copy span{font-size:6.5px;margin-top:4px}.chat-join{min-width:0;width:67px;height:54px;padding:0 7px;font-size:6.5px;line-height:1.25;text-align:center}.chat-card:first-child .chat-join{height:54px}
