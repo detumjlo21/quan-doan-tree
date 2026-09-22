@@ -308,3 +308,6 @@ main{width:min(1800px,100%);margin:auto;padding:51px 54px 60px}.hero{display:fle
  .chat-card span:not(.chat-join){font-size:9px}
  .chat-join{right:8px;font-size:7px;padding:6px 4px}
 }
+/* Box Chat: chưa có link thì không điều hướng ngược về trang cây */
+.chat-card.chat-disabled{cursor:not-allowed;opacity:.78}
+.chat-card.chat-disabled .chat-join{color:#8fa0b2;border-color:#3a4654}

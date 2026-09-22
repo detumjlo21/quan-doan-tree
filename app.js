@@ -5,7 +5,13 @@ try{ if(window.supabase?.createClient) db=window.supabase.createClient(SUPABASE_
 let data={name:"PHOENIX",branches:[],chatBoxes:[],support:{link:"#",label:"LIÊN HỆ FB",image:"logo-quant-doan.jpg"}};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const safeUrl=(url,fallback="#")=>{const v=String(url||"").trim(); if(!v)return fallback; if(v.startsWith("/")||v.startsWith("./")||v.startsWith("../"))return v; try{const u=new URL(v,location.href); return ["http:","https:"].includes(u.protocol)?u.href:fallback}catch{return fallback}};
+const safeUrl=(url,fallback="#")=>{
+  let v=String(url||"").trim();
+  if(!v)return fallback;
+  if(v.startsWith("/")||v.startsWith("./")||v.startsWith("../"))return v;
+  if(!/^https?:\/\//i.test(v)) v="https://"+v;
+  try{const u=new URL(v); return ["http:","https:"].includes(u.protocol)?u.href:fallback}catch{return fallback}
+};
 const defaultBoxes=()=>{
   const total={id:"fallback-chat-total",title:"Box Tổng ( 5 Nhánh )",subtitle:"Tham gia cộng đồng PHOENIX",image_url:"logo-quant-doan.jpg",link_url:"#",sort_order:1};
   const branches=data.branches.map((b,i)=>({id:`fallback-chat-${i+1}`,title:`PHOENIX 禄 ( Nhánh ${i+1} )`,subtitle:b.name||`Nhánh ${i+1}`,image_url:"logo-quant-doan.jpg",link_url:"#",sort_order:i+2}));
@@ -78,13 +84,24 @@ function renderChat(){
   const boxes=normalizeChatBoxes();
   data.chatBoxes=boxes;
   el.innerHTML=boxes.map((b,i)=>{
-    const link=safeUrl(b.link_url);
-    const target=link!=="#"?' target="_blank" rel="noopener noreferrer"':'';
+    const link=safeUrl(b.link_url,"");
+    const target=link?' target="_blank" rel="noopener noreferrer"':'';
     const img=esc(safeUrl(b.image_url||"logo-quant-doan.jpg","logo-quant-doan.jpg"));
     const isTotal=i===0;
     const title=esc(b.title||(isTotal?"Box Tổng ( 5 Nhánh )":`PHOENIX 禄 ( Nhánh ${i} )`));
     const subtitle=esc(b.subtitle||(isTotal?"Tham gia toàn bộ hệ thống PHOENIX":`Tham gia Box Messenger Nhánh ${i}`));
-    return `<a class="chat-card ${isTotal?'chat-total':''}" href="${esc(link)}"${target}>\n      <img src="${img}" alt="">\n      <div class="chat-copy"><b>${title}</b><span>${subtitle}</span></div>\n      <span class="chat-join">THAM GIA MESS ↗</span>\n    </a>`;
+    if(link){
+      return `<a class="chat-card ${isTotal?'chat-total':''}" href="${esc(link)}"${target}>
+        <img src="${img}" alt="">
+        <div class="chat-copy"><b>${title}</b><span>${subtitle}</span></div>
+        <span class="chat-join">THAM GIA MESS ↗</span>
+      </a>`;
+    }
+    return `<div class="chat-card ${isTotal?'chat-total':''} chat-disabled" title="Admin chưa nhập link Messenger">
+      <img src="${img}" alt="">
+      <div class="chat-copy"><b>${title}</b><span>${subtitle}</span></div>
+      <span class="chat-join">CHƯA CÓ LINK</span>
+    </div>`;
   }).join("");
 }
 function renderSupport(){const c=$("#supportCard");c.href=safeUrl(data.support.link);$("#supportImage").src=safeUrl(data.support.image,"logo-quant-doan.jpg");$("#supportLabel").textContent=data.support.label||"LIÊN HỆ FB"}
@@ -127,17 +144,58 @@ async function login(){
   if(error)$("#loginMsg").textContent=error.message;else{await load();checkUser()}
 }
 async function saveAll(){
- const {data:{user}}=await db.auth.getUser();if(!user)return;
- await db.from("quan_doan_settings").upsert({id:1,name:$("#qdanInput").value.trim()||"PHOENIX",support_link:$("#supportLinkInput").value.trim()||"#",support_label:$("#supportLabelInput").value.trim()||"LIÊN HỆ FB",support_image:$("#supportImageInput").value.trim()||"logo-quant-doan.jpg"});
- const rows=[...$("#editList").children].map(el=>{const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());return {id:el.dataset.id,...o}});for(const r of rows){const{id,...changes}=r;await db.from("quan_doan_branches").update(changes).eq("id",id)}
- const chats=[...$("#chatEditList").children].map((el,i)=>{const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());o.sort_order=i+1;return {id:el.dataset.id,...o}});
- for(const r of chats){
-   const {id,...changes}=r;
-   const isRealId=id && !String(id).startsWith("fallback-chat-");
-   const result=isRealId?await db.from("quan_doan_chat_boxes").update(changes).eq("id",id):await db.from("quan_doan_chat_boxes").insert(changes);
-   if(result.error)console.error(result.error);
- }
- await load();buildEditors();alert("Đã lưu thành công.");
+  if(!db){alert("Supabase chưa kết nối.");return;}
+  const {data:{user}}=await db.auth.getUser();
+  if(!user){alert("Phiên Admin đã hết. Vui lòng đăng nhập lại.");return;}
+
+  const settingsResult=await db.from("quan_doan_settings").upsert({
+    id:1,
+    name:$("#qdanInput").value.trim()||"PHOENIX",
+    support_link:$("#supportLinkInput").value.trim()||"#",
+    support_label:$("#supportLabelInput").value.trim()||"LIÊN HỆ FB",
+    support_image:$("#supportImageInput").value.trim()||"logo-quant-doan.jpg"
+  });
+  if(settingsResult.error){alert("Lỗi lưu thông tin: "+settingsResult.error.message);return;}
+
+  const rows=[...$("#editList").children].map(el=>{
+    const o={};el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());
+    return {id:el.dataset.id,...o};
+  });
+  for(const r of rows){
+    const {id,...changes}=r;
+    const result=await db.from("quan_doan_branches").update(changes).eq("id",id);
+    if(result.error){alert("Lỗi lưu nhánh: "+result.error.message);return;}
+  }
+
+  // Lưu đúng 6 Box: nếu đã có UUID thì update, nếu là Box mẫu/fallback thì insert.
+  const chatRows=[...$("#chatEditList").children].map((el,i)=>{
+    const o={};
+    el.querySelectorAll("[data-f]").forEach(x=>o[x.dataset.f]=x.value.trim());
+    o.sort_order=i+1;
+    return {id:el.dataset.id,...o};
+  });
+  for(const r of chatRows){
+    const {id,...changes}=r;
+    // Chuẩn hóa link trước khi lưu để m.me/... hoặc facebook.com/... vẫn thành URL thật.
+    if(changes.link_url && !/^https?:\/\//i.test(changes.link_url) && !changes.link_url.startsWith("/")){
+      changes.link_url="https://"+changes.link_url;
+    }
+    let result;
+    const isRealId=id && !String(id).startsWith("fallback-chat-");
+    if(isRealId){
+      result=await db.from("quan_doan_chat_boxes").update(changes).eq("id",id);
+    }else{
+      result=await db.from("quan_doan_chat_boxes").insert(changes);
+    }
+    if(result.error){
+      alert(`Lỗi lưu ${r.title||'Box Chat'}: ${result.error.message}`);
+      return;
+    }
+  }
+
+  await load();
+  buildEditors();
+  alert("Đã lưu 6 Box Chat và các thay đổi thành công.");
 }
 async function addBranch(){const {data:{user}}=await db.auth.getUser();if(!user)return;const next=data.branches.length+1;const {error}=await db.from("quan_doan_branches").insert({name:`NHÁNH ${next}`,sort_order:next,owner_name:"Chủ Nhánh",deputy_name:"Quyền Chủ",veteran1:"Kỳ Cựu 1",veteran2:"Kỳ Cựu 2",veteran3:"Kỳ Cựu 3"});if(error)alert(error.message);else{await load();buildEditors()}}
 async function delBranch(id){if(!confirm("Xóa nhánh này?"))return;const {error}=await db.from("quan_doan_branches").delete().eq("id",id);if(error)alert(error.message);else{await load();buildEditors()}}
